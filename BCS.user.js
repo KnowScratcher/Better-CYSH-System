@@ -29,10 +29,10 @@
 
     document.head.append()
 
-    document.querySelector("#form1 > table > tbody > tr > td > div:nth-child(2)").innerHTML = "BCS v1.0.0";
+    document.querySelector("#form1 > table > tbody > tr > td > div:nth-child(2)").innerHTML = "BCS "+GM_info.script.version;
     document.querySelector("#MenuArea > div").innerHTML = document.querySelector("#MenuArea > div").innerHTML + `<div class="grid_2" style="text-align:center;min-height: 150px;"><a id="ASAs1" title="成績查詢" href="SIndex.aspx?AsParam=X0Z3UzJuJWU0JWJlJWJkJWU4JWFiJWJkJWU3JWI1JTk0JWU5JThkJTg1ZkxUVWtPVyUxN28lN2QlN2MlMGQlN2IlMDMlMDIlN2IlMDElMDIlMTZXV1o5dTIlM2MnODMlMTUlZTUlYWQlODklZTclOTQlYWM=" target="_self" style="display:inline-block;width:100%;"><img title="成績查詢" src="../btnimg/%E6%88%90%E7%B8%BE%E6%9F%A5%E8%A9%A2.png" alt="成績查詢" style="border-width:0px;"></a><br><span id="ASlblAs1" title="成績查詢">成績查詢</span><br><br></div>`;
 
-
+    
     
     let keep_login = GM_getValue("bcs.keep_login");
     GM_setValue("bcs.keep_login",true);
