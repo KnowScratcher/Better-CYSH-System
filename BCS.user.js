@@ -26,13 +26,6 @@
     let jquery = document.createElement("script");
     jquery.src = "https://code.jquery.com/jquery-1.9.1.min.js";
     jquery.type = "text/javascript";
-    let timejs = document.createElement("script");
-    timejs.src = "https://night.myweb.hinet.net/cdn/timeline/0.0.1/dist/js/timeline.min.js";
-    timejs.type = "text/javascript";
-    let timecss = document.createElement("link");
-    timecss.rel = "stylesheet";
-    timecss.src = "https://night.myweb.hinet.net/cdn/timeline/0.0.1/dist/css/timeline.min.css"
-
 
     document.head.append()
 
