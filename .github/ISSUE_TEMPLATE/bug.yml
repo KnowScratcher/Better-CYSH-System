@@ -1,66 +1,66 @@
 name: 錯誤回報
 description: 發生錯誤了嗎
 body:
-    - type: markdown
+  - type: markdown
     attributes:
-        value: |
-        # 錯誤回報
+      value: |
+      # 錯誤回報
 
-        你發生的錯誤可能已經被回報，請檢查是否已經有人回報，再進行回報。
+      你發生的錯誤可能已經被回報，請檢查是否已經有人回報，再進行回報。
 
-        # 手機使用者注意:
+      # 手機使用者注意:
 
-        本外掛程式不支援手機，目前也不能支援手機，希望您能理解。
+      本外掛程式不支援手機，目前也不能支援手機，希望您能理解。
 
-    - type: checkboxes
-        attributes:
-            label: 事前檢查
-            description: 請確認這些你都做了並勾選。
-        options:
-            - label: 檢查issue區沒有重複或類似的問題
-            - label: 重新安裝外掛程式
-            - label: 檢查網路連線是否正常
-            - label: 檢查瀏覽器是否為最新版
+  - type: checkboxes
+    attributes:
+      label: 事前檢查
+      description: 請確認這些你都做了並勾選。
+    options:
+      - label: 檢查issue區沒有重複或類似的問題
+      - label: 重新安裝外掛程式
+      - label: 檢查網路連線是否正常
+      - label: 檢查瀏覽器是否為最新版
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: 錯誤類型
+      options:
+        - 跑版
+        - 顯示錯誤
+        - 資訊錯誤
+        - 其他
+      validations:
+        required: true
+  - type: textarea
+    attributes:
+      label: 錯誤描述
+      description: 你怎麼找到這個錯誤的？準確來說錯誤是什麼？
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 截圖
+      description: 給我們一些截圖馬，拜託
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: 你的作業系統
+      description: 看一下
         validations:
-            required: true
-    - type: dropdown
-        attributes:
-            label: 錯誤類型
-            options:
-                - 跑版
-                - 顯示錯誤
-                - 資訊錯誤
-                - 其他
-        validations:
-            required: true
-    - type: textarea
-        attributes:
-            label: 錯誤描述
-            description: 你怎麼找到這個錯誤的？準確來說錯誤是什麼？
-        validations:
-            required: true
-    - type: textarea
-        attributes:
-            label: 截圖
-            description: 給我們一些截圖馬，拜託
-        validations:
-            required: false
-    - type: input
-        attributes:
-            label: 你的作業系統
-            description: 看一下
-        validations:
-            required: true
-    - type: input
-        attributes:
-            label: 你的瀏覽器版本
-            description: 或許可以再 設定>關於 找到
-        validations:
-            required: true
-    - type: textarea
-        attributes:
-            label: 我有其他香說的
-            description: 歡迎在此說明
-        validations:
-            required: false
+      required: true
+  - type: input
+    attributes:
+      label: 你的瀏覽器版本
+      description: 或許可以再 設定>關於 找到
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 我有其他香說的
+      description: 歡迎在此說明
+    validations:
+      required: false
     
