@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Better CYSH System
+// @name         Better School System
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
-// @match        https://cysh-cy.k12ea.gov.tw/SCH_UI/*
+// @match        https://*.k12ea.gov.tw/SCH_UI/*
 // @icon         https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwVyK87J0AUJjuDvUjVZTTvuV_haCtwyzWKXoDSEuOzQ&s
 // @grant GM_setValue
 // @grant GM_getValue
