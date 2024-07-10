@@ -49,7 +49,7 @@ body:
     attributes:
       label: 你的作業系統
       description: 看一下
-        validations:
+    validations:
       required: true
   - type: input
     attributes:
