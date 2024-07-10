@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better CYSH System
 // @namespace    http://tampermonkey.net/
-// @version      v1.0.1
+// @version      1.0.1
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://cysh-cy.k12ea.gov.tw/SCH_UI/*
