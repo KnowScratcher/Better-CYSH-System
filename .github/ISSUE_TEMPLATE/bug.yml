@@ -1,5 +1,6 @@
 name: 錯誤回報
 description: 發生錯誤了嗎
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
