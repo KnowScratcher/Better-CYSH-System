@@ -59,7 +59,7 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 我有其他香說的
+      label: 我有其他想說的
       description: 歡迎在此說明
     validations:
       required: false
