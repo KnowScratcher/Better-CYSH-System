@@ -14,3 +14,9 @@
 幫你加一些功能上去，像是保持登入，不會20分鐘。
 
 **簡單來說就是外掛**
+
+# 出錯了嗎
+到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=bug&projects=&template=bug.yml)回報!
+
+# 我想提供建議
+到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=enhancement&projects=&template=request.yml)提出!
