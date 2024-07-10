@@ -17,6 +17,7 @@
 (function () {
     "use strict";
 
+    
     let icon = document.createElement("link");
     icon.href = "https://cysh-cy.k12ea.gov.tw/SCH_UI/btnimg/%e4%bf%ae%e8%aa%b2%e7%b4%80%e9%8c%84.png";
     icon.rel = "icon";
