@@ -1,0 +1,43 @@
+name: 功能建議
+description: 我想要提出功能建議
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 感謝你
+
+        感謝你想提出建議，幫助我們成長。
+
+  - type: checkboxes
+    attributes:
+      label: 在這之前請先檢查
+      description: 請確認這些你都做了並勾選。
+      options:
+        - label: 這不會用到外部的資源(圖片、程式)
+        - label: 這不是18+分級的建議
+        - label: 這不是只是想玩玩
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: 建議類型
+      options:
+        - 版面配置
+        - 新增設定
+        - 數據顯示
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 建議描述
+      description: 描述一下你的建議。
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 我有其他想說的(選)
+      description: 請說
+    validations:
+      required: false
+    
