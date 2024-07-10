@@ -1,32 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
+<li onclick="if(checkCall() !=false){bcs_setting_pop();}">
+    <img src="/SCH_UI/images/setting1.png" id="hschinfoinage" class="grid_6 omega" style="width:50px;">
+</li>
 
-<head>
-    <!-- jQuery -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <!-- BEGIN TimelineJS -->
-    <script type="text/javascript" src="https://cdn.knightlab.com/libs/timeline/latest/js/timeline-min.js"></script>
-</head>
-<body>
-    <div class="timeline-container timeline-theme-1" id="my-timeline">
-        <div class="timeline js-timeline">
-          <div data-time="2017">
-            your content or markup
-          </div>
-          <div data-time="2016">
-            your content or markup
-          </div>
-          <div data-time="2015">
-            your content or markup
-          </div>
-          <div data-time="2014">
-            your content or markup
-          </div>
-          <div data-time="2013">
-            your content or markup
-          </div>
+
+
+<div id="divbcssetting_outer_id" class="gray_bg" style="display: none;">
+    <div id="divbcssetting" class="grid_16 omega divsubcont_pop">
+        <div class="qa_content">
+            <div class="close_btn" onclick="close_bcs_setting_pop()"></div>
+            <div class="grid_4 alpha">
+                <div class="sys_item">
+                    <div class="sys_item_img">
+                        <img src="/SCH_UI/images/setting1.png" id="schoolitemimage" class="grid_2 alpha" alt="設定">
+                    </div>
+                    <div class="sys_item_text">BCS設定</div>
+                </div>
+            </div>
         </div>
-      </div>
-</body>
+        <style>
+            .bcs_setting {
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+            }
 
-</html>
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+
+            input:checked+.slider {
+                background-color: #2196F3;
+            }
+
+            input:focus+.slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked+.slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+        </style>
+        <script>
+            function bcs_setting_pop() {
+                document.getElementById("divbcssetting_outer_id").style.display = "block";
+            }
+            function close_bcs_setting_pop() {
+                document.getElementById("divbcssetting_outer_id").style.display = "none";
+            }
+        </script>
+        <div id="BullBlock" class="loginCenterBg"
+            style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
+            <div style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+                <div class="bcs_setting">
+                    <p>保持登入</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bcs-keep_login">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="bcs_setting">
+                    <p>將成績查詢移至主畫面</p>
+                    <label class="switch">
+                        <input type="checkbox"  id="bcs-move_grade">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
