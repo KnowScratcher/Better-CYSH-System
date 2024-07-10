@@ -31,8 +31,8 @@ body:
         - 顯示錯誤
         - 資訊錯誤
         - 其他
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: 錯誤描述
