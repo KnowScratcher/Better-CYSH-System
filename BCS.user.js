@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better School System
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://*.k12ea.gov.tw/SCH_UI/*
@@ -175,7 +175,7 @@
         if (config_keep_login) {
             setInterval(function () {window.dispatchEvent(new Event("compositionupdate"));},100);
         }
-        if (config_move_grade) {
+        if (config_move_grade && document.location.href.endsWith("Main.aspx")) {
             // add the grade button
             $("#MenuArea > div").append(`<div class="grid_2" style="text-align:center;min-height: 150px;"><a id="ASAs1" title="成績查詢" href="SIndex.aspx?AsParam=X0Z3UzJuJWU0JWJlJWJkJWU4JWFiJWJkJWU3JWI1JTk0JWU5JThkJTg1ZkxUVWtPVyUxN28lN2QlN2MlMGQlN2IlMDMlMDIlN2IlMDElMDIlMTZXV1o5dTIlM2MnODMlMTUlZTUlYWQlODklZTclOTQlYWM=" target="_self" style="display:inline-block;width:100%;"><img title="成績查詢" src="../btnimg/%E6%88%90%E7%B8%BE%E6%9F%A5%E8%A9%A2.png" alt="成績查詢" style="border-width:0px;"></a><br><span id="ASlblAs1" title="成績查詢">成績查詢</span><br><br></div>`);
         }
