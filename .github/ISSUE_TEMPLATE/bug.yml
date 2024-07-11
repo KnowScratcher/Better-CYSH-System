@@ -44,7 +44,7 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 截圖
+      label: 截圖(選)
       description: 給我們一些截圖馬，拜託
     validations:
       required: false
