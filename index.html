@@ -1,13 +1,7 @@
-<li onclick="if(checkCall() !=false){bcs_setting_pop();}">
-    <img src="/SCH_UI/images/setting1.png" id="hschinfoinage" class="grid_6 omega" style="width:50px;">
-</li>
-
-
-
 <div id="divbcssetting_outer_id" class="gray_bg" style="display: none;">
     <div id="divbcssetting" class="grid_16 omega divsubcont_pop">
         <div class="qa_content">
-            <div class="close_btn" onclick="close_bcs_setting_pop()"></div>
+            <div class="close_btn"></div>
             <div class="grid_4 alpha">
                 <div class="sys_item">
                     <div class="sys_item_img">
@@ -18,6 +12,9 @@
             </div>
         </div>
         <style>
+            .bcs-setting_pannel {
+                overflow-y: scroll;
+            }
             .bcs_setting {
                 width: 80%;
                 margin-left: auto;
@@ -89,17 +86,11 @@
                 border-radius: 50%;
             }
         </style>
-        <script>
-            function bcs_setting_pop() {
-                document.getElementById("divbcssetting_outer_id").style.display = "block";
-            }
-            function close_bcs_setting_pop() {
-                document.getElementById("divbcssetting_outer_id").style.display = "none";
-            }
-        </script>
         <div id="BullBlock" class="loginCenterBg"
             style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
-            <div style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+            <div id="bcs-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+                <h1>一般</h1>
+                <hr>
                 <div class="bcs_setting">
                     <p>保持登入</p>
                     <label class="switch">
@@ -110,11 +101,40 @@
                 <div class="bcs_setting">
                     <p>將成績查詢移至主畫面</p>
                     <label class="switch">
-                        <input type="checkbox"  id="bcs-move_grade">
+                        <input type="checkbox" id="bcs-move_grade">
                         <span class="slider round"></span>
                     </label>
+                </div>
+                <div class="bcs_setting">
+                    <p>顯示成績圖表()</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bcs-dashboard">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <h1>顏色</h1>
+                <hr>
+                <div class="bcs_setting">
+                    <p>排名PR90+顏色</p>
+                    <input type="color" id="bcs-rank_color90p">
+                </div>
+                <div class="bcs_setting">
+                    <p>排名PR75+顏色</p>
+                    <input type="color" id="bcs-rank_color75p">
+                </div>
+                <div class="bcs_setting">
+                    <p>排名PR20+顏色</p>
+                    <input type="color" id="bcs-rank_color20p">
+                </div>
+                <div class="bcs_setting">
+                    <p>排名PR20-顏色</p>
+                    <input type="color" id="bcs-rank_color20m">
+                </div>
+                <div class="bcs_setting">
+                    <p>未追上排名顏色</p>
+                    <input type="color" id="bcs-rank_colorNoRank">
                 </div>
             </div>
         </div>
     </div>
-</div> 
+</div>
