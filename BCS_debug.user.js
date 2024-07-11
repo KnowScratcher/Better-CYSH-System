@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Better School System
+// @name         Better School System - debug
 // @namespace    http://tampermonkey.net/
 // @version      1.1.0-pre1
 // @description  校務行政系統太爛，我來改一下
@@ -16,7 +16,7 @@
 
 (function () {
     "use strict";
-
+    console.log("[BCS] initalizing BCS.");
     let config_keep_login = false;
     let config_move_grade = false;
     let config_dashboard = false;
@@ -27,7 +27,7 @@
     let config_rank_colorNoRank = "#000000";
 
     let setting_changed = false;
-
+    console.log("[BCS] changing icon");
     let icon = document.createElement("link");
     icon.href = "https://cysh-cy.k12ea.gov.tw/SCH_UI/btnimg/%e4%bf%ae%e8%aa%b2%e7%b4%80%e9%8c%84.png";
     icon.rel = "icon";
@@ -36,6 +36,8 @@
 
 
     $(document).ready(function () {
+        console.log("[BCS] document ready.");
+        console.log("[BCS] initalizing settings.");
         // config setup
         config_keep_login = GM_getValue("bcs.keep_login");
         config_move_grade = GM_getValue("bcs.move_grade");
@@ -78,23 +80,31 @@
             config_rank_colorNoRank = "#aaaaaa";
             GM_setValue("bcs.rank_colorNoRank",config_rank_colorNoRank);
         }
+        console.log("[BCS] setting initalized.");
         // show version
         if (document.location.href.endsWith("Login.aspx")) {
+            console.log("[BCS] on login page.");
             $("#Login_Assota > div").append(` (BCS ${GM_info.script.version})`);
         }else {
+            console.log("[BCS] on other page.");
             $("#form1 > table > tbody > tr > td").append(`<div style="position: fixed;bottom: 0px;right: 0px;z-index: 2;">BCS ${GM_info.script.version}</div>`)
         }
         // setting setup
+        console.log("[BCS] setting up setting form.");
         setup_setting_form();
-        
+        console.log("[BCS] setting form setup done.");
+        console.log("[BCS] setting up canvas js.");
         add_canvas_js();
+        console.log("[BCS] canvas js setup done.");
 
         if (config_keep_login) {
+            console.log("[BCS] keep login is yes.");
             setInterval(function () {window.dispatchEvent(new Event("compositionupdate"));},100);
         }
         if (document.location.href.endsWith("Main.aspx")) {
             // add the grade button
-
+            console.log("[BCS] in main page.");
+            console.log("[BCS] getting grade.");
             $.get($("#ASAs2").prop("href"),function (data) { // get the fking data
                 if (config_move_grade) {
                     $("#MenuArea > div:nth-child(1)").append($(data).find("#MenuArea > div > div:nth-child(2)"))
@@ -103,11 +113,13 @@
                     let grade_page = $(data).find("#ASAs1").prop("href");
                     $.get($(data).find("#ASAs1").prop("href"),function (dp_page) {
                         $.get($(dp_page).find("#iframecontent").prop("src"),function (grade_page) {
+                            console.log("[BCS] recording grade.");
                             let t1_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam1_lab").text();
                             let t2_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam2_lab").text();
                             let t3_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examFinal_lab").text();
                             let all_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examTerm_lab").text();
                             draw_dash(t1_school,t2_school,t3_school,all_school);
+                            console.log("[BCS] record done.");
                         });
                     });
                 }
@@ -120,6 +132,7 @@
         $("#divmenu > ul").append(`<li id="bcs_setting_icon">
     <img src="/SCH_UI/images/setting1.png" id="hschinfoinage" class="grid_6 omega" style="width:50px;">
 </li>`);
+        console.log("[BCS > setting form] icon done.");
         // setting box 
         $("#form1").append(`<div id="divbcssetting_outer_id" class="gray_bg" style="display: none;">
     <div id="divbcssetting" class="grid_16 omega divsubcont_pop">
@@ -261,6 +274,8 @@
         </div>
     </div>
 </div>`);
+        console.log("[BCS > setting form] form done.");
+        console.log("[BCS > setting form] setting up events.");
         $("#bcs_setting_icon").click(function () {
             $("#divbcssetting_outer_id").fadeIn();
         })
@@ -330,13 +345,16 @@
             GM_setValue("bcs.rank_colorNoRank",config_rank_colorNoRank);
             console.log("rank_colorNoRank = "+config_rank_colorNoRank);
         });
+        console.log("[BCS > setting form] events setup done.");
     }
 
     function draw_dash(t1_school,t2_school,t3_school,all_school) {
+        console.log("[BCS > dash] ready to setup.");
         $("#MenuArea").append(`<div id="t1_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
 <div id="t2_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
 <div id="t3_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
 <div id="all_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>`);
+            console.log("[BCS > dash] space setup done.");
             let t1_school_data = toInt(t1_school.split("/"));
             let t2_school_data = toInt(t2_school.split("/"));
             let t3_school_data = toInt(t3_school.split("/"));
@@ -433,6 +451,7 @@
             t2_school_chart.render();
             t3_school_chart.render();
             all_school_chart.render();
+            console.log("[BCS > dash] rendered.");
     }
 
     function toInt(l) {
