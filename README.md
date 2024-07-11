@@ -1,3 +1,4 @@
+[![wakatime](https://wakatime.com/badge/github/KnowScratcher/Better-CYSH-System.svg)](https://wakatime.com/badge/github/KnowScratcher/Better-CYSH-System)
 # Better School Sysyem
 我還是必須拯救一下用亞昕系統的學校。
 
