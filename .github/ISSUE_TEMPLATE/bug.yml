@@ -28,9 +28,10 @@ body:
     attributes:
       label: 錯誤類型
       options:
-        - 跑版
-        - 顯示錯誤
-        - 資訊錯誤
+        - 跑版(位置問題)
+        - 顯示(該顯示沒顯示)
+        - 顯示(錯誤的顯示位置)
+        - 資訊(顯示資訊錯誤S)
         - 其他
     validations:
       required: true
