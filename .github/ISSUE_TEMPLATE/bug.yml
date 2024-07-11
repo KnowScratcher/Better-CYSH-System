@@ -27,6 +27,7 @@ body:
   - type: dropdown
     attributes:
       label: 錯誤類型
+      description: 若是兩種類型請分開提出。
       options:
         - 跑版(位置問題)
         - 顯示(該顯示沒顯示)
