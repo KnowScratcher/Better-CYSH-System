@@ -14,6 +14,7 @@ body:
       label: 在這之前請先檢查
       description: 請確認這些你都做了並勾選。
       options:
+        - label: 這沒有被別人提出過
         - label: 這不會用到外部的資源(圖片、程式)
         - label: 這不是18+分級的建議
         - label: 這不是只是想玩玩
