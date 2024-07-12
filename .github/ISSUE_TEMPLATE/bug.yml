@@ -19,6 +19,7 @@ body:
       description: 請確認這些你都做了並勾選。
       options:
         - label: 檢查issue區沒有重複或類似的問題
+        - label: 檢查開發人員模式是否開啟
         - label: 重新安裝外掛程式
         - label: 檢查網路連線是否正常
         - label: 檢查瀏覽器是否為最新版
