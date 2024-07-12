@@ -22,5 +22,5 @@
 # 出錯了嗎
 到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=bug&projects=&template=bug.yml)回報!
 
-# 我想提供建議
+# 我想要新功能
 到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=enhancement&projects=&template=request.yml)提出!
