@@ -24,3 +24,9 @@
 
 # 我想要新功能
 到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=enhancement&projects=&template=request.yml)提出!
+
+# 感謝資料來源
+若有不小心侵權，請[以email告知](mailto:yianlee2008@gmail.com)，我會儘快將該內容移除。
+## 笑話
+- [2023笑話大全 - 飄然](https://floatintheair.pixnet.net/blog/post/114189178)
+- [2024笑話大全 - 飄然](https://floatintheair.pixnet.net/blog/post/67784866)

@@ -5,7 +5,7 @@
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://*.k12ea.gov.tw/SCH_UI/*
-// @icon         https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwVyK87J0AUJjuDvUjVZTTvuV_haCtwyzWKXoDSEuOzQ&s
+// @icon         https://upload.cc/i1/2024/07/12/NFWOMy.png
 // @grant GM_setValue
 // @grant GM_getValue
 // @grant GM.setValue
@@ -16,6 +16,27 @@
 
 (function () {
     "use strict";
+
+    let joke = [
+        "床前明月光 手機在發光",
+        "枯藤 老樹 昏鴨 <br> 7-11 OK 全家",
+        "川普跌倒變甚麼？  三普",
+        "曹操字孟德<br>劉備字玄德<br>伍佰呢？<br>五百字心得",
+        "西醫治標<br>中醫治本<br>中西合併<br>治成標本",
+        "一山還有一山高<br>蘿蔔還有蘿蔔糕<br>醬油還有醬油膏<br>雞蛋還有雞蛋糕<br>他媽薪水沒變高",
+        "留得青山在，到處都能燒",
+        "千山鳥飛絕，凍死沒知覺",
+        "思念是一種病<br>思樂是一種冰",
+        "小明和外國人吵架<br>小明：你算那根蔥<br>外國人：我是洋蔥",
+        "達文西密碼的上面是什麼?<br>達文西帳號",
+        "最慢的系統是什麼?<br>讓你可以在這裡看笑話的系統",
+        "警衛在笑什麼?<br>警衛在校門口",
+        "有一天小明走著進超商，坐著輪椅出來<br>因為他繳費了",
+        "舉重選手抓舉失敗，他會說什麼？<br>真重 再見",
+        "台灣舞后是？雷陣雨"
+
+    ]
+    let joke_now = joke[Math.floor(Math.random() * (joke.length-1)) + 1];
 
     let config_keep_login = false;
     let config_move_grade = false;
@@ -33,59 +54,58 @@
     icon.rel = "icon";
     document.head.appendChild(icon);
 
-
-
     $(document).ready(function () {
         // config setup
-        config_keep_login = GM_getValue("bcs.keep_login");
-        config_move_grade = GM_getValue("bcs.move_grade");
-        config_dashboard = GM_getValue("bcs.dashboard");
-        config_rank_color90p = GM_getValue("bcs.rank_color90p");
-        config_rank_color75p = GM_getValue("bcs.rank_color75p");
-        config_rank_color20p = GM_getValue("bcs.rank_color20p");
-        config_rank_color20m = GM_getValue("bcs.rank_color20m");
-        config_rank_colorNoRank = GM_getValue("bcs.rank_colorNoRank");
+        config_keep_login = GM_getValue("bss.keep_login");
+        config_move_grade = GM_getValue("bss.move_grade");
+        config_dashboard = GM_getValue("bss.dashboard");
+        config_rank_color90p = GM_getValue("bss.rank_color90p");
+        config_rank_color75p = GM_getValue("bss.rank_color75p");
+        config_rank_color20p = GM_getValue("bss.rank_color20p");
+        config_rank_color20m = GM_getValue("bss.rank_color20m");
+        config_rank_colorNoRank = GM_getValue("bss.rank_colorNoRank");
         setting_changed = false;
         if (config_keep_login == undefined) {
             config_keep_login = false;
-            GM_setValue("bcs.keep_login",config_keep_login);
+            GM_setValue("bss.keep_login",config_keep_login);
         }  
         if (config_move_grade == undefined) {
             config_move_grade = true;
-            GM_setValue("bcs.move_grade",config_move_grade);
+            GM_setValue("bss.move_grade",config_move_grade);
         }
         if (config_dashboard == undefined) {
             config_dashboard = true;
-            GM_setValue("bcs.dashboard",config_dashboard);
+            GM_setValue("bss.dashboard",config_dashboard);
         }
         if (config_rank_color90p == undefined) {
             config_rank_color90p = "#00ffff";
-            GM_setValue("bcs.rank_color90p",config_rank_color90p);
+            GM_setValue("bss.rank_color90p",config_rank_color90p);
         }
         if (config_rank_color75p == undefined) {
             config_rank_color75p = "#00ffaa";
-            GM_setValue("bcs.rank_color75p",config_rank_color75p);
+            GM_setValue("bss.rank_color75p",config_rank_color75p);
         }
         if (config_rank_color20p == undefined) {
             config_rank_color20p = "#ffaa00";
-            GM_setValue("bcs.rank_color20p",config_rank_color20p);
+            GM_setValue("bss.rank_color20p",config_rank_color20p);
         }
         if (config_rank_color20m == undefined) {
             config_rank_color20m = "#ff0000";
-            GM_setValue("bcs.rank_color20m",config_rank_color20m);
+            GM_setValue("bss.rank_color20m",config_rank_color20m);
         }
         if (config_rank_colorNoRank == undefined) {
             config_rank_colorNoRank = "#aaaaaa";
-            GM_setValue("bcs.rank_colorNoRank",config_rank_colorNoRank);
+            GM_setValue("bss.rank_colorNoRank",config_rank_colorNoRank);
         }
         // show version
         if (document.location.href.endsWith("Login.aspx")) {
-            $("#Login_Assota > div").append(` (BCS ${GM_info.script.version})`);
+            $("#Login_Assota > div").append(` (BSS ${GM_info.script.version})`);
         }else {
-            $("#form1 > table > tbody > tr > td").append(`<div style="position: fixed;bottom: 0px;right: 0px;z-index: 2;">BCS ${GM_info.script.version}</div>`)
+            $("#form1 > table > tbody > tr > td").append(`<div style="position: fixed;bottom: 0px;right: 0px;z-index: 2;">BSS ${GM_info.script.version}</div>`)
         }
         // setting setup
         setup_setting_form();
+        setup_fade_UI();
         
         add_canvas_js();
 
@@ -113,16 +133,21 @@
                 }
             });
         }
+        
     });
-
+    joke_now = joke[Math.floor(Math.random() * (joke.length))];
+    $("#AsdivProgress > font").remove();
+    $("#AsdivProgress").css({"margin-left": "-10vw", "width": "20vw"});
+    $("#AsdivProgress > div").css({"margin-left": "auto", "margin-right": "auto"});
+    $("#AsdivProgress").append(`<p style="color: rgb(27, 53, 99);">${joke_now}</p>`);
     function setup_setting_form() {
         // setting icon
-        $("#divmenu > ul").append(`<li id="bcs_setting_icon">
+        $("#divmenu > ul").append(`<li id="bss_setting_icon">
     <img src="/SCH_UI/images/setting1.png" id="hschinfoinage" class="grid_6 omega" style="width:50px;">
 </li>`);
         // setting box 
-        $("#form1").append(`<div id="divbcssetting_outer_id" class="gray_bg" style="display: none;">
-    <div id="divbcssetting" class="grid_16 omega divsubcont_pop">
+        $("#form1").append(`<div id="divbsssetting_outer_id" class="gray_bg" style="display: none;">
+    <div id="divbsssetting" class="grid_16 omega divsubcont_pop">
         <div class="qa_content">
             <div class="close_btn"></div>
             <div class="grid_4 alpha">
@@ -130,15 +155,15 @@
                     <div class="sys_item_img">
                         <img src="/SCH_UI/images/setting1.png" id="schoolitemimage" class="grid_2 alpha" alt="設定">
                     </div>
-                    <div class="sys_item_text">BCS設定</div>
+                    <div class="sys_item_text">BSS設定</div>
                 </div>
             </div>
         </div>
         <style>
-            .bcs-setting_pannel {
+            .bss-setting_pannel {
                 overflow-y: scroll;
             }
-            .bcs_setting {
+            .bss_setting {
                 width: 80%;
                 margin-left: auto;
                 margin-right: auto;
@@ -211,123 +236,123 @@
         </style>
         <div id="BullBlock" class="loginCenterBg"
             style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
-            <div id="bcs-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+            <div id="bss-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
                 <h1>一般</h1>
                 <hr>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>保持登入</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-keep_login">
+                        <input type="checkbox" id="bss-keep_login">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>將成績查詢移至主畫面</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-move_grade">
+                        <input type="checkbox" id="bss-move_grade">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>顯示成績圖表</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-dashboard">
+                        <input type="checkbox" id="bss-dashboard">
                         <span class="slider round"></span>
                     </label>
                 </div>
                 <h1>顏色</h1>
                 <hr>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR90+顏色</p>
-                    <input type="color" id="bcs-rank_color90p">
+                    <input type="color" id="bss-rank_color90p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR75+顏色</p>
-                    <input type="color" id="bcs-rank_color75p">
+                    <input type="color" id="bss-rank_color75p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR20+顏色</p>
-                    <input type="color" id="bcs-rank_color20p">
+                    <input type="color" id="bss-rank_color20p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR20-顏色</p>
-                    <input type="color" id="bcs-rank_color20m">
+                    <input type="color" id="bss-rank_color20m">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>未追上排名顏色</p>
-                    <input type="color" id="bcs-rank_colorNoRank">
+                    <input type="color" id="bss-rank_colorNoRank">
                 </div>
             </div>
         </div>
     </div>
 </div>`);
-        $("#bcs_setting_icon").click(function () {
-            $("#divbcssetting_outer_id").fadeIn();
+        $("#bss_setting_icon").click(function () {
+            $("#divbsssetting_outer_id").fadeIn();
         })
-        $("#divbcssetting > div.qa_content > div.close_btn").click(function () { 
-            $("#divbcssetting_outer_id").fadeOut();
+        $("#divbsssetting > div.qa_content > div.close_btn").click(function () { 
+            $("#divbsssetting_outer_id").fadeOut();
             if (setting_changed) {
                 document.location.reload();
             }
         });
 
-        $("#bcs-keep_login").prop("checked",config_keep_login);
-        $("#bcs-keep_login").change(function () { 
+        $("#bss-keep_login").prop("checked",config_keep_login);
+        $("#bss-keep_login").change(function () { 
             setting_changed = true;
             config_keep_login = this.checked;
-            GM_setValue("bcs.keep_login",config_keep_login);
+            GM_setValue("bss.keep_login",config_keep_login);
             console.log("move_grade = "+config_keep_login);
         });
 
-        $("#bcs-move_grade").prop("checked",config_move_grade);
-        $("#bcs-move_grade").change(function () { 
+        $("#bss-move_grade").prop("checked",config_move_grade);
+        $("#bss-move_grade").change(function () { 
             setting_changed = true;
             config_move_grade = this.checked;
-            GM_setValue("bcs.move_grade",config_move_grade);
+            GM_setValue("bss.move_grade",config_move_grade);
             console.log("move_grade = "+config_move_grade);
         });
 
-        $("#bcs-dashboard").prop("checked",config_dashboard);
-        $("#bcs-dashboard").change(function () { 
+        $("#bss-dashboard").prop("checked",config_dashboard);
+        $("#bss-dashboard").change(function () { 
             setting_changed = true;
             config_dashboard = this.checked;
-            GM_setValue("bcs.dashboard",config_dashboard);
+            GM_setValue("bss.dashboard",config_dashboard);
             console.log("dashboard = "+config_dashboard);
         });
 
-        $("#bcs-rank_color90p").val(config_rank_color90p);
-        $("#bcs-rank_color90p").change(function () { 
+        $("#bss-rank_color90p").val(config_rank_color90p);
+        $("#bss-rank_color90p").change(function () { 
             setting_changed = true;
             config_rank_color90p = $(this).val();
-            GM_setValue("bcs.rank_color90p",config_rank_color90p);
+            GM_setValue("bss.rank_color90p",config_rank_color90p);
             console.log("rank_color90p = "+config_rank_color90p);
         });
-        $("#bcs-rank_color75p").val(config_rank_color75p);
-        $("#bcs-rank_color75p").change(function () { 
+        $("#bss-rank_color75p").val(config_rank_color75p);
+        $("#bss-rank_color75p").change(function () { 
             setting_changed = true;
             config_rank_color75p = $(this).val();
-            GM_setValue("bcs.rank_color75p",config_rank_color75p);
+            GM_setValue("bss.rank_color75p",config_rank_color75p);
             console.log("rank_color75p = "+config_rank_color75p);
         });
-        $("#bcs-rank_color20p").val(config_rank_color20p);
-        $("#bcs-rank_color20p").change(function () { 
+        $("#bss-rank_color20p").val(config_rank_color20p);
+        $("#bss-rank_color20p").change(function () { 
             setting_changed = true;
             config_rank_color20p = $(this).val();
-            GM_setValue("bcs.rank_color20p",config_rank_color20p);
+            GM_setValue("bss.rank_color20p",config_rank_color20p);
             console.log("rank_color20p = "+config_rank_color20p);
         });
-        $("#bcs-rank_color20m").val(config_rank_color20m);
-        $("#bcs-rank_color20m").change(function () { 
+        $("#bss-rank_color20m").val(config_rank_color20m);
+        $("#bss-rank_color20m").change(function () { 
             setting_changed = true;
             config_rank_color20m = $(this).val();
-            GM_setValue("bcs.rank_color20m",config_rank_color20m);
+            GM_setValue("bss.rank_color20m",config_rank_color20m);
             console.log("rank_color20m = "+config_rank_color20m);
         });
-        $("#bcs-rank_colorNoRank").val(config_rank_colorNoRank);
-        $("#bcs-rank_colorNoRank").change(function () { 
+        $("#bss-rank_colorNoRank").val(config_rank_colorNoRank);
+        $("#bss-rank_colorNoRank").change(function () { 
             setting_changed = true;
             config_rank_colorNoRank = $(this).val();
-            GM_setValue("bcs.rank_colorNoRank",config_rank_colorNoRank);
+            GM_setValue("bss.rank_colorNoRank",config_rank_colorNoRank);
             console.log("rank_colorNoRank = "+config_rank_colorNoRank);
         });
     }
@@ -435,14 +460,113 @@
             all_school_chart.render();
     }
 
+    // Improve UI
+    function setup_fade_UI() {
+        // account control
+        $("#form1 > div:nth-child(10) > div").click(function () {
+            $("#infoFoldPop1").fadeToggle()
+        });
+        //
+        $("#hschinfoinage").click(function () {
+            $("#divsubcont_outer_id").fadeIn();
+        });
+        $("#divsubcont > div.qa_content > div.close_btn").prop("onclick","");
+        $("#divsubcont > div.qa_content > div.close_btn").click(function () {
+            $("#divsubcont_outer_id").fadeOut();
+        });
+    }
+
+
     function toInt(l) {
         let result = []
         l.forEach(element => {
             result.push(parseInt(element));
         });
         return result;
+    }	
+
+    unsafeWindow.AsProgress = function AsProgress() {
+        
+        var h = "50vh";
+        var w = "50vw";
+        
+        //20240423 loading
+        let style = document.createElement('style');
+        style.textContent = "\n  .dot {\n    position: absolute;\n    width: 15px;\n    height: 15px;\n    background-color: green;\n    border-radius: 50%;\n  }\n  @keyframes loadingRotate {\n    0% {\n      transform: rotate(0);\n    }\n    100% {\n      transform: rotate(360deg);\n    }\n  }\n";
+        document.head.appendChild(style);
+        
+    
+        let loadingContainer = document.createElement("div");
+        loadingContainer.style = "width: 55px;height: 60px;margin-left: auto;margin-right: auto;animation: loadingRotate 1s linear infinite;";
+        let loadingdot1 = document.createElement("div");
+        loadingdot1.className = "dot";
+        loadingdot1.style.top = "0";
+        loadingdot1.style.left = "calc(50% - 7.5px)";
+        loadingdot1.style.opacity = ".1667";
+        let loadingdot2 = document.createElement("div");
+        loadingdot2.className = "dot";
+        loadingdot2.style.top = "calc(33.33% - 5px)";
+        loadingdot2.style.left = "calc(100% - 15px)";
+        loadingdot2.style.opacity = ".3333";
+        let loadingdot3 = document.createElement("div");
+        loadingdot3.className = "dot";
+        loadingdot3.style.top = "calc(66.67% - 5px)";
+        loadingdot3.style.left = "calc(100% - 15px)";
+        loadingdot3.style.opacity = ".5";
+        let loadingdot4 = document.createElement("div");
+        loadingdot4.className = "dot";
+        loadingdot4.style.top = "calc(100% - 15px)";
+        loadingdot4.style.left = "calc(50% - 7.5px)";
+        loadingdot4.style.opacity = ".6667";
+        let loadingdot5 = document.createElement("div");
+        loadingdot5.className = "dot";
+        loadingdot5.style.top = "calc(66.67% - 7.5px)";
+        loadingdot5.style.left = "0";
+        loadingdot5.style.opacity = ".8333";
+        let loadingdot6 = document.createElement("div");
+        loadingdot6.className = "dot";
+        loadingdot6.style.top = "calc(33.33% - 7.5px)";
+        loadingdot6.style.left = "0";
+        loadingdot6.style.opacity = "1";
+        loadingContainer.appendChild(loadingdot1);
+        loadingContainer.appendChild(loadingdot2);
+        loadingContainer.appendChild(loadingdot3);
+        loadingContainer.appendChild(loadingdot4);
+        loadingContainer.appendChild(loadingdot5);
+        loadingContainer.appendChild(loadingdot6);
+    
+        var brTag = document.createElement("br");
+    
+        var fontTag = document.createElement("p");
+        fontTag.style.color = "#1B3563";
+        fontTag.innerHTML = joke_now;
+        
+        var progress = document.createElement("div");
+        progress.id = "AsdivProgress"
+        progress.style.textAlign = "center";		
+        progress.appendChild(loadingContainer);
+        progress.appendChild(brTag);
+        progress.appendChild(fontTag);
+    
+        progress.style.position = "fixed";
+        progress.style.top = h;
+        progress.style.left = w ;
+        progress.style.marginLeft = "-10vw";
+        progress.style.width = "20vw";
+        progress.style.zIndex = "99999";
+        progress.style.display = '';
+        if (self.frameElement && self.frameElement.tagName == "IFRAME") {
+            var oprogress = window.top.document.getElementById("AsdivProgress");
+            if (oprogress == null || typeof (oprogress) == "undefind") {
+                window.top.document.body.appendChild(progress);
+            }
+        }
+        else {
+            document.body.appendChild(progress);
+        }
     }
 
+    // To add module
     function add_canvas_js() {
         
             /*
@@ -557,7 +681,7 @@ a.length)}));n+=(Q?Y:"")+t;return v?"-"+n:n},Pa=function(d){var m=0,n=0;d=d||win
 A;d.globalAlpha=O;d.fillRect(n,v,N-n,t-v);d.globalAlpha=1;0<C&&(O=0===C%2?0:0.5,d.beginPath(),d.lineWidth=C,d.strokeStyle=G,d.moveTo(n,v),d.rect(n-O,v-O,N-n+2*O,t-v+2*O),d.stroke());d.restore();!0===L&&(d.save(),d.beginPath(),d.moveTo(n,v),d.lineTo(n+H,v+H),d.lineTo(N-H,v+H),d.lineTo(N,v),d.closePath(),C=d.createLinearGradient((N+n)/2,v+H,(N+n)/2,v),C.addColorStop(0,A),C.addColorStop(1,"rgba(255, 255, 255, .4)"),d.fillStyle=C,d.fill(),d.restore());!0===Q&&(d.save(),d.beginPath(),d.moveTo(n,t),d.lineTo(n+
 H,t-H),d.lineTo(N-H,t-H),d.lineTo(N,t),d.closePath(),C=d.createLinearGradient((N+n)/2,t-H,(N+n)/2,t),C.addColorStop(0,A),C.addColorStop(1,"rgba(255, 255, 255, .4)"),d.fillStyle=C,d.fill(),d.restore());!0===W&&(d.save(),d.beginPath(),d.moveTo(n,v),d.lineTo(n+H,v+H),d.lineTo(n+H,t-H),d.lineTo(n,t),d.closePath(),C=d.createLinearGradient(n+H,(t+v)/2,n,(t+v)/2),C.addColorStop(0,A),C.addColorStop(1,"rgba(255, 255, 255, 0.1)"),d.fillStyle=C,d.fill(),d.restore());!0===P&&(d.save(),d.beginPath(),d.moveTo(N,
 v),d.lineTo(N-H,v+H),d.lineTo(N-H,t-H),d.lineTo(N,t),C=d.createLinearGradient(N-H,(t+v)/2,N,(t+v)/2),C.addColorStop(0,A),C.addColorStop(1,"rgba(255, 255, 255, 0.1)"),d.fillStyle=C,C.addColorStop(0,A),C.addColorStop(1,"rgba(255, 255, 255, 0.1)"),d.fillStyle=C,d.fill(),d.closePath(),d.restore())},ia=function(d){for(var n="",v=0;v<d.length;v++)n+=String.fromCharCode(Math.ceil(d.length/57/5)^d.charCodeAt(v));return n},kb=window&&(window[ia("mnb\`uhno")]&&window[ia("mnb\`uhno")].href&&window[ia("mnb\`uhno")].href.indexOf&&
-(-1!==window[ia("mnb\`uhno")].href.indexOf(ia("b\`ow\`rkr/bnl"))||-1!==window[ia("mnb\`uhno")].href.indexOf(ia("gdonqhy/bnl"))||-1!==window[ia("mnb\`uhno")].href.indexOf(ia("gheemd"))))&&-1===window[ia("mnb\`uhno")].href.indexOf(ia("gheemd")),lb={reset:{image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAeCAYAAABJ/8wUAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPjSURBVFhHxVdJaFNRFP1J/jwkP5MxsbaC1WJEglSxOFAXIsFpVRE3ggi1K90obioRRBA33XXnQnciirhQcMCdorgQxBkXWlREkFKsWkv5npvckp/XnzRpKh64kLw733fffe9L/wrL0+mVUdO8uTSZ3MBL/we2qg4rkuSpodCELstXE46ziVkLQ6FQcGOmeSSq6wd4aV50d3drWjj8kQKZJTUc9kxFGenv79dZrDksTSTWWJp2QYtEPiErysyzdX0LsxsCQR8keX8gs6RHIk8ysdgKFg2G53mhuOPsshTlBjKaFo1g7SqLNoShKLdFXT8huQ/paLSbxatYnc2mHMM4hr18Vi8TIvCmXF3vYrW6cF23gGTOk0M1wA4RKvOmq6vLZRVJipvmSWT6tZ6CSEYkco5V50VPT4+D7RwOqi6RiSZm0fJ+vggSqkeoypdsNmuyelNwbXsbgvkWYMtzDWNvWaijoyOBqE+hVK8abcssUeXQ/YfKyi0gFYv1Ipgfoj34fYGTJLOYJA0ODirok32GLN8XhUWCwSes1hIwBg6LydJ/tEeRRapAdUp+wSAiZchtZZWWgAZ+JNpD8peYXQVK9UwUxNpzOK8pq97kURZhYTCKBwPD7h2zK+js7Myi7D8Fod+0TkMI8+EMAngLGc/WtBFWawkFHFnoj/t9KLgGmF0B3QfkxC+EarxkdhnFYlFLY06USqUwL7UMjICHfh/wOc2sCqhpxGbCkLvL7EUDbF73+6DkmVWB6zi7xUDQSLeYvWjAILvm9zEnkJhlbRcDQZcv6Kg2AipyT/Axw6wKlqVSqxDdjF8Izfod13qURdrG/nxehY+xGh+h0CSzKygGvSNQIcc097BI24jb9hax6kj2E7OrMFX1il+ICEf2NrPbhiXLl+fYl+U7zK4iYdsDcyLGf+ofFlkwcN+s10KhmpuYhhtm0hCLVIFL0MDsqNlDIqy9x2CLs1jL6OvrI7vPRbtohXG6eFmsFnHDGAp6n9AgyuVySRZrGvROxRgIfLXhzjrNYnNBUxNX/dMgRWT1mt4XLDovaApD53E9W3ilNX5M55LJHpRtIsgAvciR4WWcgK2Dvb1YqgXevmF8z2zEBTcKG39EfSKsT9EbhVUaI2FZO+oZIqImxol6j66/hcAu4sSN4vc1ZPoKeoE6RGhYL2YYA+ymOSSi0Z0wWntbtkGUWCvfSDXIxONraZ/FY90KUfNTpfC5spnNLgxoYNnR9RO4F8ofXEHOgogCQE99w+fF2Xw+b7O59rEOsyRqGEfpVoaDMQQ1CZrG46bcM6AZ0C/wPqNfHliqejyTySxh9TqQpL+xmbIlkB9SlAAAAABJRU5ErkJggg=="},
+(-1!==window[ia("mnb\`uhno")].href.indexOf(ia("b\`ow\`rkr/bnl"))||-1!==window[ia("mnb\`uhno")].href.indexOf(ia("gdonqhy/bnl"))||-1!==window[ia("mnb\`uhno")].href.indexOf(ia("gheemd"))))&&-1===window[ia("mnb\`uhno")].href.indexOf(ia("gheemd")),lb={reset:{image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAeCAYAAABJ/8wUAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPjSURBVFhHxVdJaFNRFP1J/jwkP5MxsbaC1WJEglSxOFAXIsFpVRE3ggi1K90obioRRBA33XXnQnciirhQcMCdorgQxBkXWlREkFKsWkv5npvckp/XnzRpKh64kLw733fffe9L/wrL0+mVUdO8uTSZ3MBL/we2qg4rkuSpodCELstXE46ziVkLQ6FQcGOmeSSq6wd4aV50d3drWjj8kQKZJTUc9kxFGenv79dZrDksTSTWWJp2QYtEPiErysyzdX0LsxsCQR8keX8gs6RHIk8ysdgKFg2G53mhuOPsshTlBjKaFo1g7SqLNoShKLdFXT8huQ/paLSbxatYnc2mHMM4hr18Vi8TIvCmXF3vYrW6cF23gGTOk0M1wA4RKvOmq6vLZRVJipvmSWT6tZ6CSEYkco5V50VPT4+D7RwOqi6RiSZm0fJ+vggSqkeoypdsNmuyelNwbXsbgvkWYMtzDWNvWaijoyOBqE+hVK8absssUeXQ/YfKyi0gFYv1Ipgfoj34fYGTJLOYJA0ODirok32GLN8XhUWCwSes1hIwBg6LydJ/tEeRRapAdUp+wSAiZchtZZWWgAZ+JNpD8peYXQVK9UwUxNpzOK8pq97kURZhYTCKBwPD7h2zK+js7Myi7D8Fod+0TkMI8+EMAngLGc/WtBFWawkFHFnoj/t9KLgGmF0B3QfkxC+EarxkdhnFYlFLY06USqUwL7UMjICHfh/wOc2sCqhpxGbCkLvL7EUDbF73+6DkmVWB6zi7xUDQSLeYvWjAILvm9zEnkJhlbRcDQZcv6Kg2AipyT/Axw6wKlqVSqxDdjF8Izfod13qURdrG/nxehY+xGh+h0CSzKygGvSNQIcc097BI24jb9hax6kj2E7OrMFX1il+ICEf2NrPbhiXLl+fYl+U7zK4iYdsDcyLGf+ofFlkwcN+s10KhmpuYhhtm0hCLVIFL0MDsqNlDIqy9x2CLs1jL6OvrI7vPRbtohXG6eFmsFnHDGAp6n9AgyuVySRZrGvROxRgIfLXhzjrNYnNBUxNX/dMgRWT1mt4XLDovaApD53E9W3ilNX5M55LJHpRtIsgAvciR4WWcgK2Dvb1YqgXevmF8z2zEBTcKG39EfSKsT9EbhVUaI2FZO+oZIqImxol6j66/hcAu4sSN4vc1ZPoKeoE6RGhYL2YYA+ymOSSi0Z0wWntbtkGUWCvfSDXIxONraZ/FY90KUfNTpfC5spnNLgxoYNnR9RO4F8ofXEHOgogCQE99w+fF2Xw+b7O59rEOsyRqGEfpVoaDMQQ1CZrG46bcM6AZ0C/wPqNfHliqejyTySxh9TqQpL+xmbIlkB9SlAAAAABJRU5ErkJggg=="},
 pan:{image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAICSURBVEhLxZbPahNRGMUn/5MpuAiBEAIufQGfzr5E40YptBXajYzudCEuGqS+gGlrFwquDGRTutBdYfydzJ3LzeQmJGZue+Dw/Z17Mnfmu5Pof9Hr9Z61Wq0bWZMKj263O6xWq99wU9lOpzPMKgEhEcRucNOcioOK+0RzBhNvt9tPV4nmVF19+OWhVqt9xXgFXZq+8lCv119UKpUJ7iX2FmvFTKz8RH34YdBsNk8wVtjE4fGYwm8wrrDi3WBG5oKXZGRSS9hGuNFojLTe2lFz5xThWZIktayyiE2FdT3rzXBXz7krKiL8c17wAKFDjCus2AvW+YGZ9y2JF0VFRuMPfI//rsCE/C+s26s4gQu9ul7r4NteKx7H8XOC724xNNGbaNu++IrBqbOV7Tj3FgMRvc/YKOr3+3sE47wgEt/Bl/gaK5cHbNU11vYSXylfpK7XOvjuumPp4Wcoipu30Qsez2uMXYz4lfI+mOmwothY+SLiXJy7mKVpWs3Si0CoOMfeI9Od43Wic+jO+ZVv+crsm9QSNhUW9LXSeoPBYLXopthGuFQgdIxxhY+UDwlt1x5CZ1hX+NTUdt/OIvjKaDSmuOJfaIVNPKX+W18j/PLA2/kR44p5Sd8HbHngT/yTfNRWUXX14ZcL3wmX0+TLf8YO7CGT8yFE5zB3/gney25/OETRP9CtPDFe5jShAAAAAElFTkSuQmCC"},
 zoom:{image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALWSURBVEhLvZZLaBNRFIabyftBIgEfqCCBoCC6MYqiXYiIj4U76U4X7sUHbhQhUBfixhZEUBDB16YuFERaUaQLK7ooCOJj4UKtYEFU0EptShO/A9Ph3js3k8lo/eHnP7n3nP/M3LlzMz1hkUwmNziOcyKRSFyFt+LxeD/c2Wq1Ym7Kv0M2m11Os1OxWGycn1OwZXCGuXfwIhezkd9/jRgNT2L4ldhs1pbkX5OLJe4euVxuGQaPCa3mnUjtJx7BDuKusJTCV6jVVGHTMuYRjxma7yIOhTgFY6jNaAKew2xPKpVay9ganmkvj+M448/MfJdT5K5Gg4HJacRngPFgqVRaRNwW1B4i7yehWfsEDdz1K+A01AoxPIqGAiuwGfkOTY8+1A6u7AyiFTB2Hu0KPIrdiOnzHLWDybeImvy+Wq2mZa5bUHsD0Zpz+KxHdWQymV6kAb1ElqeORgJLvgnRdj1+R1AfzkIvSUjxVjQSarVakrueIPT8+H1F5jSUy+WXiJrUYBVWyVxU4PEU8TzhfaijUqnMIWrjaY492eWRwdKOIqrnIxnXwLLeRLwk2GQzrEMjg0avEbXxkIxr4OoOImpj2QwyFgms1koa/SZUG8s+0iGnEhNfCNXEhzIXBVz0McTzEvJ+70P9oNFtxEzei3aFYrFYxmuSUPWSv9Yi9IMm2xE1We56Mp1OV4nDwqFmBDV9gk9AEh4gZtFHNt8W4kAUCoXF5MorY9Z/kDni9nDv7hc0i2fhgLvTtX8a99PoMPPagTFPxofRzmDJ9yM+AyEmTfgGysYbQcfhDzPPJDmX0c7gDg4gs9BqFIWhm/Nct5H8gtBq1I7UfIbtvmIuoaGQcp+fdpbbSM43eEH5wrwLbXmhm/fU63VHXjcuok7hEByFY/AeHGC8L5/PL3HT5xGH1uYwfPOICGo+CBcU0vwO1BqzUqILDl/z/9VYIMfpddiAc47jDP8BsUpb13wOLRwAAAAASUVORK5CYII="},
 menu:{image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAeCAYAAABE4bxTAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADoSURBVFhH7dc9CsJAFATgRxIIBCwCqZKATX5sbawsY2MvWOtF9AB6AU8gguAJbD2AnZ2VXQT/Ko2TYGCL2OYtYQc+BuYA+1hCtnCVwMm27SGaXpDJIAiCvCkVR05hGOZNN3HkFMdx3nQRR06+76/R1IcFLJlNQEWlmWlBTwJtKLKHynehZqnjOGM0PYWRVXk61C37p7xlZ3Hk5HneCk1dmMH811xGoKLSzDiQwIBZB4ocoPJdqNkDt2yKlueWRVGUtzy3rPwo3sWRU3nLjuLI6OO67oZM00wMw3hrmpZx0XU9syxrR0T0BeMpb9dneSR2AAAAAElFTkSuQmCC"}};
