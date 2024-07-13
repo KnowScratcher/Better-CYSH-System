@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better School System
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0-pre3
+// @version      1.1.0-pre4
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://*.k12ea.gov.tw/SCH_UI/*
@@ -49,13 +49,54 @@
 
     let setting_changed = false;
 
+    read_config();
+    add_canvas_js();
+
     let icon = document.createElement("link");
     icon.href = "https://cysh-cy.k12ea.gov.tw/SCH_UI/btnimg/%e4%bf%ae%e8%aa%b2%e7%b4%80%e9%8c%84.png";
     icon.rel = "icon";
     document.head.appendChild(icon);
 
+    joke_now = joke[Math.floor(Math.random() * (joke.length))];
+    override_loading();
+
     $(document).ready(function () {
-        // config setup
+        // show version
+        inject_version();
+        // setting setup
+        setup_setting_form();
+        override_to_fade_UI();
+        if (config_keep_login) {
+            setInterval(function () {window.dispatchEvent(new Event("compositionupdate"));},100);
+        }
+        if (document.location.href.endsWith("Main.aspx")) {
+            process_main_screen();
+        }
+        
+    });
+
+    function process_main_screen() {
+        if (config_move_grade || config_dashboard){
+            $.get($("#ASAs2").prop("href"),function (data) { // get the fking data
+                if (config_move_grade) {
+                    $("#MenuArea > div:nth-child(1)").append($(data).find("#MenuArea > div > div:nth-child(2)"))
+                }
+                if (config_dashboard) {
+                    $.get($(data).find("#ASAs1").prop("href"),function (dp_page) {
+                        $.get($(dp_page).find("#iframecontent").prop("src"),function (grade_page) {
+                            let t1_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam1_lab").text();
+                            let t2_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam2_lab").text();
+                            let t3_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examFinal_lab").text();
+                            let all_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examTerm_lab").text();
+                            draw_dash(t1_school,t2_school,t3_school,all_school);
+                        });
+                    });
+                }
+            });
+        }
+    }
+
+    function read_config() {
         config_keep_login = GM_getValue("bss.keep_login");
         config_move_grade = GM_getValue("bss.move_grade");
         config_dashboard = GM_getValue("bss.dashboard");
@@ -97,49 +138,8 @@
             config_rank_colorNoRank = "#aaaaaa";
             GM_setValue("bss.rank_colorNoRank",config_rank_colorNoRank);
         }
-        // show version
-        if (document.location.href.endsWith("Login.aspx")) {
-            $("#Login_Assota > div").append(` (BSS ${GM_info.script.version})`);
-        }else {
-            $("#form1 > table > tbody > tr > td").append(`<div style="position: fixed;bottom: 0px;right: 0px;z-index: 2;">BSS ${GM_info.script.version}</div>`)
-        }
-        // setting setup
-        setup_setting_form();
-        setup_fade_UI();
-        
-        add_canvas_js();
+    }
 
-        if (config_keep_login) {
-            setInterval(function () {window.dispatchEvent(new Event("compositionupdate"));},100);
-        }
-        if (document.location.href.endsWith("Main.aspx")) {
-            // add the grade button
-
-            $.get($("#ASAs2").prop("href"),function (data) { // get the fking data
-                if (config_move_grade) {
-                    $("#MenuArea > div:nth-child(1)").append($(data).find("#MenuArea > div > div:nth-child(2)"))
-                }
-                if (config_dashboard) {
-                    let grade_page = $(data).find("#ASAs1").prop("href");
-                    $.get($(data).find("#ASAs1").prop("href"),function (dp_page) {
-                        $.get($(dp_page).find("#iframecontent").prop("src"),function (grade_page) {
-                            let t1_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam1_lab").text();
-                            let t2_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam2_lab").text();
-                            let t3_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examFinal_lab").text();
-                            let all_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examTerm_lab").text();
-                            draw_dash(t1_school,t2_school,t3_school,all_school);
-                        });
-                    });
-                }
-            });
-        }
-        
-    });
-    joke_now = joke[Math.floor(Math.random() * (joke.length))];
-    $("#AsdivProgress > font").remove();
-    $("#AsdivProgress").css({"margin-left": "-10vw", "width": "20vw"});
-    $("#AsdivProgress > div").css({"margin-left": "auto", "margin-right": "auto"});
-    $("#AsdivProgress").append(`<p style="color: rgb(27, 53, 99);">${joke_now}</p>`);
     function setup_setting_form() {
         // setting icon
         $("#divmenu > ul").append(`<li id="bss_setting_icon">
@@ -460,8 +460,23 @@
             all_school_chart.render();
     }
 
-    // Improve UI
-    function setup_fade_UI() {
+    // Overrides/Injection
+    function inject_version() {
+        if (document.location.href.endsWith("Login.aspx")) {
+            $("#Login_Assota > div").append(` (BSS ${GM_info.script.version})`);
+        }else {
+            $("#form1 > table > tbody > tr > td").append(`<div style="position: fixed;bottom: 0px;right: 0px;z-index: 2;">BSS ${GM_info.script.version}</div>`)
+        }
+    }
+
+    function override_loading() {
+        $("#AsdivProgress > font").remove();
+        $("#AsdivProgress").css({"margin-left": "-10vw", "width": "20vw"});
+        $("#AsdivProgress > div").css({"margin-left": "auto", "margin-right": "auto"});
+        $("#AsdivProgress").append(`<p style="color: rgb(27, 53, 99);">${joke_now}</p>`);
+    }
+
+    function override_to_fade_UI() {
         // account control
         $("#form1 > div:nth-child(10) > div").click(function () {
             $("#infoFoldPop1").fadeToggle()
@@ -475,15 +490,6 @@
             $("#divsubcont_outer_id").fadeOut();
         });
     }
-
-
-    function toInt(l) {
-        let result = []
-        l.forEach(element => {
-            result.push(parseInt(element));
-        });
-        return result;
-    }	
 
     unsafeWindow.AsProgress = function AsProgress() {
         
@@ -566,7 +572,16 @@
         }
     }
 
-    // To add module
+    // Tool Function
+    function toInt(l) {
+        let result = []
+        l.forEach(element => {
+            result.push(parseInt(element));
+        });
+        return result;
+    }	
+
+    // Modules
     function add_canvas_js() {
         
             /*
