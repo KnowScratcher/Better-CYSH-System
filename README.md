@@ -25,6 +25,9 @@
 # 我想要新功能
 到[這裡](https://github.com/KnowScratcher/Better-School-System/issues/new?assignees=&labels=enhancement&projects=&template=request.yml)提出!
 
+# 加入我們的Discord
+[點這個神奇的連結](https://discord.gg/gbHQWKqGde)
+
 # 感謝資料來源
 若有不小心侵權，請[以email告知](mailto:yianlee2008@gmail.com)，我會儘快將該內容移除。
 ## 笑話
