@@ -41,6 +41,7 @@
     let config_keep_login = false;
     let config_move_grade = false;
     let config_dashboard = false;
+    let config_dashboard_type = "";
     let config_rank_color90p = "#000000";
     let config_rank_color75p = "#000000";
     let config_rank_color20p = "#000000";
@@ -84,11 +85,28 @@
                 if (config_dashboard) {
                     $.get($(data).find("#ASAs1").prop("href"),function (dp_page) {
                         $.get($(dp_page).find("#iframecontent").prop("src"),function (grade_page) {
-                            let t1_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam1_lab").text();
-                            let t2_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam2_lab").text();
-                            let t3_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examFinal_lab").text();
-                            let all_school = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examTerm_lab").text();
-                            draw_dash(t1_school,t2_school,t3_school,all_school);
+                            let t1,t2,t3,all;
+                            switch (config_dashboard_type) {
+                                case "school":
+                                    t1 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam1_lab").text();
+                                    t2 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_exam2_lab").text();
+                                    t3 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examFinal_lab").text();
+                                    all = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl05_GrdStd_ScoreAvgRank_examTerm_lab").text();
+                                    break;
+                                case "group":
+                                    t1 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl04_GrdStd_ScoreAvgRank_exam1_lab").text();
+                                    t2 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl04_GrdStd_ScoreAvgRank_exam2_lab").text();
+                                    t3 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl04_GrdStd_ScoreAvgRank_examFinal_lab").text();
+                                    all = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl04_GrdStd_ScoreAvgRank_examTerm_lab").text();
+                                    break;
+                                case "class":
+                                    t1 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl03_GrdStd_ScoreAvgRank_exam1_lab").text();
+                                    t2 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl03_GrdStd_ScoreAvgRank_exam2_lab").text();
+                                    t3 = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl03_GrdStd_ScoreAvgRank_examFinal_lab").text();
+                                    all = $(grade_page).find("#GrdStd_ScoreAvgRank_ctl03_GrdStd_ScoreAvgRank_examTerm_lab").text();
+                                    break;
+                                }
+                            draw_dash(t1,t2,t3,all);
                         });
                     });
                 }
@@ -100,6 +118,7 @@
         config_keep_login = GM_getValue("bss.keep_login");
         config_move_grade = GM_getValue("bss.move_grade");
         config_dashboard = GM_getValue("bss.dashboard");
+        config_dashboard_type = GM_getValue("bss.dashboard_type");
         config_rank_color90p = GM_getValue("bss.rank_color90p");
         config_rank_color75p = GM_getValue("bss.rank_color75p");
         config_rank_color20p = GM_getValue("bss.rank_color20p");
@@ -117,6 +136,10 @@
         if (config_dashboard == undefined) {
             config_dashboard = true;
             GM_setValue("bss.dashboard",config_dashboard);
+        }
+        if (config_dashboard_type == undefined) {
+            config_dashboard_type = "school";
+            GM_setValue("bss.dashboard_type",config_dashboard_type);
         }
         if (config_rank_color90p == undefined) {
             config_rank_color90p = "#00ffff";
@@ -260,6 +283,16 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
+                <h1>圖表</h1>
+                <hr>
+                <div class="bss_setting">
+                    <p>顯示排名種類</p>
+                    <select name="rank_type" id="bss-dashboard_type">
+                        <option value="school">校排</option>
+                        <option value="group">班群排</option>
+                        <option value="class">班排</option>
+                    </select>
+                </div>
                 <h1>顏色</h1>
                 <hr>
                 <div class="bss_setting">
@@ -319,7 +352,13 @@
             GM_setValue("bss.dashboard",config_dashboard);
             console.log("dashboard = "+config_dashboard);
         });
-
+        $("#bss-dashboard_type").val(config_dashboard_type);
+        $("#bss-dashboard_type").change(function () { 
+            setting_changed = true;
+            config_dashboard_type = $(this).val();
+            GM_setValue("bss.dashboard_type",config_dashboard_type);
+            console.log("dashboard_type = "+config_dashboard_type);
+        });
         $("#bss-rank_color90p").val(config_rank_color90p);
         $("#bss-rank_color90p").change(function () { 
             setting_changed = true;
@@ -357,107 +396,65 @@
         });
     }
 
-    function draw_dash(t1_school,t2_school,t3_school,all_school) {
-        $("#MenuArea").append(`<div id="t1_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
-<div id="t2_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
-<div id="t3_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>
-<div id="all_school_chart" style="height: 200px; width: 45%;display: inline-block;"></div>`);
-            let t1_school_data = toInt(t1_school.split("/"));
-            let t2_school_data = toInt(t2_school.split("/"));
-            let t3_school_data = toInt(t3_school.split("/"));
-            let all_school_data = toInt(all_school.split("/"));
+    function draw_dash(t1,t2,t3,all) {
+        let datas = [t1,t2,t3,all];
+        let names = ["第一次段考","第二次段考","第三次段考","總成績"];
+        let suffix;
+        switch (config_dashboard_type) {
+            case "school":
+                suffix = "校排";
+                break;
+            case "group":
+                suffix = "班群排";
+                break;
+            case "class":
+                suffix = "班排";
+                break;
+        }
+        $("#MenuArea").append(`<div id="chart_0" style="height: 200px; width: 45%;display: inline-block;"></div>
+<div id="chart_1" style="height: 200px; width: 45%;display: inline-block;"></div>
+<div id="chart_2" style="height: 200px; width: 45%;display: inline-block;"></div>
+<div id="chart_3" style="height: 200px; width: 45%;display: inline-block;"></div>`);
 
-            let t1_school_ratio = (t1_school_data[1]-t1_school_data[0])/t1_school_data[1];
-            let t2_school_ratio = (t2_school_data[1]-t2_school_data[0])/t2_school_data[1];
-            let t3_school_ratio = (t3_school_data[1]-t3_school_data[0])/t3_school_data[1];
-            let all_school_ratio = (all_school_data[1]-all_school_data[0])/all_school_data[1];
-
-            let t1_school_color = (t1_school_ratio>=0.9?config_rank_color90p:(t1_school_ratio>=0.75?config_rank_color75p:(t1_school_ratio>=0.2?config_rank_color20p:config_rank_color20m)));
-            let t2_school_color = (t2_school_ratio>=0.9?config_rank_color90p:(t2_school_ratio>=0.75?config_rank_color75p:(t2_school_ratio>=0.2?config_rank_color20p:config_rank_color20m)));
-            let t3_school_color = (t3_school_ratio>=0.9?config_rank_color90p:(t3_school_ratio>=0.75?config_rank_color75p:(t3_school_ratio>=0.2?config_rank_color20p:config_rank_color20m)));
-            let all_school_color = (all_school_ratio>=0.9?config_rank_color90p:(all_school_ratio>=0.75?config_rank_color75p:(all_school_ratio>=0.2?config_rank_color20p:config_rank_color20m)));
-
-            let t1_school_chart = new CanvasJS.Chart("t1_school_chart", {
-                animationEnabled: true,
-                title:{
-                    text: "第一次段考校排",
-                    horizontalAlign: "left"
-                },
-                data: [{
-                    type: "doughnut",
-                    startAngle: -90,
-                    //innerRadius: 60,
-                    indexLabelFontSize: 17,
-                    indexLabel: "{label} - #percent%",
-                    toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-                    dataPoints: [
-                        { y: t1_school_data[1]-t1_school_data[0], label: "在你後面的", color: t1_school_color},
-                        { y: t1_school_data[0], label: "在你前面的", color: config_rank_colorNoRank }
-                    ]
-                }]
-            });
-            let t2_school_chart = new CanvasJS.Chart("t2_school_chart", {
-                animationEnabled: true,
-                title:{
-                    text: "第二次段考校排",
-                    horizontalAlign: "left"
-                },
-                data: [{
-                    type: "doughnut",
-                    startAngle: -90,
-                    //innerRadius: 60,
-                    indexLabelFontSize: 17,
-                    indexLabel: "{label} - #percent%",
-                    toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-                    dataPoints: [
-                        { y: t2_school_data[1]-t2_school_data[0], label: "在你後面的", color: t2_school_color },
-                        { y: t2_school_data[0], label: "在你前面的", color: config_rank_colorNoRank }
-                    ]
-                }]
-            });
-            let t3_school_chart = new CanvasJS.Chart("t3_school_chart", {
-                animationEnabled: true,
-                title:{
-                    text: "第三次段考校排",
-                    horizontalAlign: "left"
-                },
-                data: [{
-                    type: "doughnut",
-                    startAngle: -90,
-                    //innerRadius: 60,
-                    indexLabelFontSize: 17,
-                    indexLabel: "{label} - #percent%",
-                    toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-                    dataPoints: [
-                        { y: t3_school_data[1]-t3_school_data[0], label: "在你後面的", color: t3_school_color },
-                        { y: t3_school_data[0], label: "在你前面的", color: config_rank_colorNoRank }
-                    ]
-                }]
-            });
-            let all_school_chart = new CanvasJS.Chart("all_school_chart", {
-                animationEnabled: true,
-                title:{
-                    text: "總成績校排",
-                    horizontalAlign: "left"
-                },
-                data: [{
-                    type: "doughnut",
-                    startAngle: -90,
-                    //innerRadius: 60,
-                    indexLabelFontSize: 17,
-                    indexLabel: "{label} - #percent%",
-                    toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-                    dataPoints: [
-                        { y: all_school_data[1]-all_school_data[0], label: "在你後面的", color: all_school_color },
-                        { y: all_school_data[0], label: "在你前面的", color: config_rank_colorNoRank }
-                    ]
-                }]
-            });
+            for (let i=0;i<datas.length;i++) {
+                let data = get_data(datas[i]);
+                let ratio = get_ratio(data);
+                let color = (ratio>=0.9?config_rank_color90p:(ratio>=0.75?config_rank_color75p:(ratio>=0.2?config_rank_color20p:config_rank_color20m)));
+                new CanvasJS.Chart(`chart_${i}`, {
+                    animationEnabled: true,
+                    title:{
+                        text: `${names[i]}${suffix}`,
+                        horizontalAlign: "left"
+                    },
+                    data: [{
+                        type: "doughnut",
+                        startAngle: -90,
+                        //innerRadius: 60,
+                        indexLabelFontSize: 17,
+                        indexLabel: "{label} - #percent%",
+                        toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+                        dataPoints: [
+                            { y: data[1], label: "在你後面的", color: color},
+                            { y: data[0], label: "在你前面的", color: config_rank_colorNoRank }
+                        ]
+                    }]
+                }).render();
+            }
             
-            t1_school_chart.render();
-            t2_school_chart.render();
-            t3_school_chart.render();
-            all_school_chart.render();
+    }
+
+    function get_data(s) {
+        /* input string */
+        /* returns [before, behind, all] */
+        let data = toInt(s.split("/"));
+        data[2] = data[1];
+        data[1] -= data[0];
+        return data;
+    }
+
+    function get_ratio(data) {
+        /* behind/all */
+        return data[1]/data[2];
     }
 
     // Overrides/Injection

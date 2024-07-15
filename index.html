@@ -1,5 +1,5 @@
-<div id="divbcssetting_outer_id" class="gray_bg" style="display: none;">
-    <div id="divbcssetting" class="grid_16 omega divsubcont_pop">
+<div id="divbsssetting_outer_id" class="gray_bg" style="display: none;">
+    <div id="divbsssetting" class="grid_16 omega divsubcont_pop">
         <div class="qa_content">
             <div class="close_btn"></div>
             <div class="grid_4 alpha">
@@ -7,15 +7,15 @@
                     <div class="sys_item_img">
                         <img src="/SCH_UI/images/setting1.png" id="schoolitemimage" class="grid_2 alpha" alt="設定">
                     </div>
-                    <div class="sys_item_text">BCS設定</div>
+                    <div class="sys_item_text">BSS設定</div>
                 </div>
             </div>
         </div>
         <style>
-            .bcs-setting_pannel {
+            .bss-setting_pannel {
                 overflow-y: scroll;
             }
-            .bcs_setting {
+            .bss_setting {
                 width: 80%;
                 margin-left: auto;
                 margin-right: auto;
@@ -88,51 +88,61 @@
         </style>
         <div id="BullBlock" class="loginCenterBg"
             style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
-            <div id="bcs-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+            <div id="bss-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
                 <h1>一般</h1>
                 <hr>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>保持登入</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-keep_login">
+                        <input type="checkbox" id="bss-keep_login">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>將成績查詢移至主畫面</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-move_grade">
+                        <input type="checkbox" id="bss-move_grade">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>顯示成績圖表</p>
                     <label class="switch">
-                        <input type="checkbox" id="bcs-dashboard">
+                        <input type="checkbox" id="bss-dashboard">
                         <span class="slider round"></span>
                     </label>
+                </div>
+                <h1>圖表</h1>
+                <hr>
+                <div class="bss_setting">
+                    <p>顯示排名種類</p>
+                    <select name="rank_type" id="bss-dashboard_type">
+                        <option value="school">校排</option>
+                        <option value="group">班群排</option>
+                        <option value="class">班排</option>
+                    </select>
                 </div>
                 <h1>顏色</h1>
                 <hr>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR90+顏色</p>
-                    <input type="color" id="bcs-rank_color90p">
+                    <input type="color" id="bss-rank_color90p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR75+顏色</p>
-                    <input type="color" id="bcs-rank_color75p">
+                    <input type="color" id="bss-rank_color75p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR20+顏色</p>
-                    <input type="color" id="bcs-rank_color20p">
+                    <input type="color" id="bss-rank_color20p">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>排名PR20-顏色</p>
-                    <input type="color" id="bcs-rank_color20m">
+                    <input type="color" id="bss-rank_color20m">
                 </div>
-                <div class="bcs_setting">
+                <div class="bss_setting">
                     <p>未追上排名顏色</p>
-                    <input type="color" id="bcs-rank_colorNoRank">
+                    <input type="color" id="bss-rank_colorNoRank">
                 </div>
             </div>
         </div>
