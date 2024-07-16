@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better School System
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0-pre4
+// @version      1.1.0-pre5
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://*.k12ea.gov.tw/SCH_UI/*
