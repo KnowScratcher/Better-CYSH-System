@@ -12,8 +12,11 @@
             </div>
         </div>
         <style>
-            .bss-setting_pannel {
+            #bss-setting_pannel {
                 overflow-y: scroll;
+            }
+            #bss-setting_pannel h2 {
+                font-size: 1.5rem;
             }
             .bss_setting {
                 width: 80%;
@@ -122,7 +125,41 @@
                         <option value="class">班排</option>
                     </select>
                 </div>
+                <div class="bss_setting">
+                    <p>顯示等級</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-dashboard_level">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
                 <h1>顏色</h1>
+                <h2>等級</h2>
+                <hr>
+                <div class="bss_setting">
+                    <p>排名第一名顏色</p>
+                    <input type="color" id="bss-level_color100">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR90+顏色</p>
+                    <input type="color" id="bss-level_color90p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR75+顏色</p>
+                    <input type="color" id="bss-level_color75p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR50+顏色</p>
+                    <input type="color" id="bss-level_color50p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20+顏色</p>
+                    <input type="color" id="bss-level_color20p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20-顏色</p>
+                    <input type="color" id="bss-level_color20m">
+                </div>
+                <h2>圖表</h2>
                 <hr>
                 <div class="bss_setting">
                     <p>排名PR90+顏色</p>
@@ -141,7 +178,7 @@
                     <input type="color" id="bss-rank_color20m">
                 </div>
                 <div class="bss_setting">
-                    <p>未追上排名顏色</p>
+                    <p>在你前面的排名顏色</p>
                     <input type="color" id="bss-rank_colorNoRank">
                 </div>
             </div>

@@ -42,6 +42,13 @@
     let config_move_grade = false;
     let config_dashboard = false;
     let config_dashboard_type = "";
+    let config_dashboard_level = false;
+    let config_level_color100 = "#000000";
+    let config_level_color90p = "#000000";
+    let config_level_color75p = "#000000";
+    let config_level_color50p = "#000000";
+    let config_level_color20p = "#000000";
+    let config_level_color20m = "#000000";
     let config_rank_color90p = "#000000";
     let config_rank_color75p = "#000000";
     let config_rank_color20p = "#000000";
@@ -119,6 +126,13 @@
         config_move_grade = GM_getValue("bss.move_grade");
         config_dashboard = GM_getValue("bss.dashboard");
         config_dashboard_type = GM_getValue("bss.dashboard_type");
+        config_dashboard_level = GM_getValue("bss.dashboard_level");
+        config_level_color100 = GM_getValue("bss.level_color100");
+        config_level_color90p = GM_getValue("bss.level_color90p");
+        config_level_color75p = GM_getValue("bss.level_color75p");
+        config_level_color50p = GM_getValue("bss.level_color50p");
+        config_level_color20p = GM_getValue("bss.level_color20p");
+        config_level_color20m = GM_getValue("bss.level_color20m");
         config_rank_color90p = GM_getValue("bss.rank_color90p");
         config_rank_color75p = GM_getValue("bss.rank_color75p");
         config_rank_color20p = GM_getValue("bss.rank_color20p");
@@ -140,6 +154,34 @@
         if (config_dashboard_type == undefined) {
             config_dashboard_type = "school";
             GM_setValue("bss.dashboard_type",config_dashboard_type);
+        }
+        if (config_dashboard_level == undefined) {
+            config_dashboard_level = true;
+            GM_setValue("bss.dashboard_level",config_dashboard_level);
+        }
+        if (config_level_color100 == undefined) {
+            config_level_color100 = "#ee00ff";
+            GM_setValue("bss.level_color100",config_level_color100);
+        }
+        if (config_level_color90p == undefined) {
+            config_level_color90p = "#00ffff";
+            GM_setValue("bss.level_color90p",config_level_color90p);
+        }
+        if (config_level_color75p == undefined) {
+            config_level_color75p = "#00ffaa";
+            GM_setValue("bss.level_color75p",config_level_color75p);
+        }
+        if (config_level_color50p == undefined) {
+            config_level_color50p = "#ffdd00";
+            GM_setValue("bss.level_color50p",config_level_color50p);
+        }
+        if (config_level_color20p == undefined) {
+            config_level_color20p = "#ffaa00";
+            GM_setValue("bss.level_color20p",config_level_color20p);
+        }
+        if (config_level_color20m == undefined) {
+            config_level_color20m = "#ff0000";
+            GM_setValue("bss.level_color20m",config_level_color20m);
         }
         if (config_rank_color90p == undefined) {
             config_rank_color90p = "#00ffff";
@@ -183,8 +225,11 @@
             </div>
         </div>
         <style>
-            .bss-setting_pannel {
+            #bss-setting_pannel {
                 overflow-y: scroll;
+            }
+            #bss-setting_pannel h2 {
+                font-size: 1.5rem;
             }
             .bss_setting {
                 width: 80%;
@@ -293,7 +338,41 @@
                         <option value="class">班排</option>
                     </select>
                 </div>
+                <div class="bss_setting">
+                    <p>顯示等級</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-dashboard_level">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
                 <h1>顏色</h1>
+                <h2>等級</h2>
+                <hr>
+                <div class="bss_setting">
+                    <p>排名第一名顏色</p>
+                    <input type="color" id="bss-level_color100">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR90+顏色</p>
+                    <input type="color" id="bss-level_color90p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR75+顏色</p>
+                    <input type="color" id="bss-level_color75p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR50+顏色</p>
+                    <input type="color" id="bss-level_color50p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20+顏色</p>
+                    <input type="color" id="bss-level_color20p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20-顏色</p>
+                    <input type="color" id="bss-level_color20m">
+                </div>
+                <h2>圖表</h2>
                 <hr>
                 <div class="bss_setting">
                     <p>排名PR90+顏色</p>
@@ -312,7 +391,7 @@
                     <input type="color" id="bss-rank_color20m">
                 </div>
                 <div class="bss_setting">
-                    <p>未追上排名顏色</p>
+                    <p>在你前面的排名顏色</p>
                     <input type="color" id="bss-rank_colorNoRank">
                 </div>
             </div>
@@ -358,6 +437,55 @@
             config_dashboard_type = $(this).val();
             GM_setValue("bss.dashboard_type",config_dashboard_type);
             console.log("dashboard_type = "+config_dashboard_type);
+        });
+        $("#bss-dashboard_level").prop("checked",config_dashboard_level);
+        $("#bss-dashboard_level").change(function () { 
+            setting_changed = true;
+            config_dashboard_level = this.checked;
+            GM_setValue("bss.dashboard_level",config_dashboard_level);
+            console.log("dashboard_level = "+config_dashboard_level);
+        });
+        $("#bss-level_color100").val(config_level_color100);
+        $("#bss-level_color100").change(function () { 
+            setting_changed = true;
+            config_level_color100 = $(this).val();
+            GM_setValue("bss.level_color100",config_level_color100);
+            console.log("level_color100 = "+config_level_color100);
+        });
+        $("#bss-level_color90p").val(config_level_color90p);
+        $("#bss-level_color90p").change(function () { 
+            setting_changed = true;
+            config_level_color90p = $(this).val();
+            GM_setValue("bss.level_color90p",config_level_color90p);
+            console.log("level_color90p = "+config_level_color90p);
+        });
+        $("#bss-level_color75p").val(config_level_color75p);
+        $("#bss-level_color75p").change(function () { 
+            setting_changed = true;
+            config_level_color75p = $(this).val();
+            GM_setValue("bss.level_color75p",config_level_color75p);
+            console.log("level_color75p = "+config_level_color75p);
+        });
+        $("#bss-level_color50p").val(config_level_color50p);
+        $("#bss-level_color50p").change(function () { 
+            setting_changed = true;
+            config_level_color50p = $(this).val();
+            GM_setValue("bss.level_color50p",config_level_color50p);
+            console.log("level_color50p = "+config_level_color50p);
+        });
+        $("#bss-level_color20p").val(config_level_color20p);
+        $("#bss-level_color20p").change(function () { 
+            setting_changed = true;
+            config_level_color20p = $(this).val();
+            GM_setValue("bss.level_color20p",config_level_color20p);
+            console.log("level_color20p = "+config_level_color20p);
+        });
+        $("#bss-level_color20m").val(config_level_color20m);
+        $("#bss-level_color20m").change(function () { 
+            setting_changed = true;
+            config_level_color20m = $(this).val();
+            GM_setValue("bss.level_color20m",config_level_color20m);
+            console.log("level_color20m = "+config_level_color20m);
         });
         $("#bss-rank_color90p").val(config_rank_color90p);
         $("#bss-rank_color90p").change(function () { 
@@ -419,12 +547,25 @@
             for (let i=0;i<datas.length;i++) {
                 let data = get_data(datas[i]);
                 let ratio = get_ratio(data);
-                let color = (ratio>=0.9?config_rank_color90p:(ratio>=0.75?config_rank_color75p:(ratio>=0.2?config_rank_color20p:config_rank_color20m)));
+                let rank_color = (ratio>=0.9?config_rank_color90p:(ratio>=0.75?config_rank_color75p:(ratio>=0.2?config_rank_color20p:config_rank_color20m)));
+                let level_text =(!config_dashboard_level?"":(ratio==1?"SS":(ratio>=0.9?"S":(ratio>=0.75?"A":(ratio>=0.5?"B":(ratio>=0.2?"C":"D"))))));
+                let level_color = (!config_dashboard_level?"":(ratio==1?config_level_color100:(ratio>=0.9?config_level_color90p:(ratio>=0.75?config_level_color75p:(ratio>=0.5?config_level_color50p:(ratio>=0.2?config_level_color20p:config_level_color20m))))));
                 new CanvasJS.Chart(`chart_${i}`, {
                     animationEnabled: true,
                     title:{
-                        text: `${names[i]}${suffix}`,
-                        horizontalAlign: "left"
+                        text: level_text,
+                        horizontalAlign: "center",
+                        verticalAlign:"center",
+                        dockInsidePlotArea:true,
+                        fontColor:level_color,
+                        fontSize:46,
+                        fontFamily: "arial"
+                    },
+                    subtitles:[
+                        {text:`${names[i]}${suffix}`}
+                    ],
+                    legend: {
+                        verticalAlign: "top"
                     },
                     data: [{
                         type: "doughnut",
@@ -434,7 +575,7 @@
                         indexLabel: "{label} - #percent%",
                         toolTipContent: "<b>{label}:</b> {y} (#percent%)",
                         dataPoints: [
-                            { y: data[1], label: "在你後面的", color: color},
+                            { y: data[1], label: "在你後面的", color: rank_color},
                             { y: data[0], label: "在你前面的", color: config_rank_colorNoRank }
                         ]
                     }]
@@ -447,7 +588,9 @@
         /* input string */
         /* returns [before, behind, all] */
         let data = toInt(s.split("/"));
-        data[2] = data[1];
+        data[1] -= 1; // -1 means peoples without user
+        data[2] = data[1]; 
+        data[0] -= 1; // -= 1 to exclude user
         data[1] -= data[0];
         return data;
     }
