@@ -57,6 +57,8 @@
 
     let setting_changed = false;
 
+    let warnings = [];
+
     read_config();
     add_canvas_js();
 
@@ -84,6 +86,7 @@
     });
 
     function process_main_screen() {
+        process_alert();
         if (config_move_grade || config_dashboard){
             $.get($("#ASAs2").prop("href"),function (data) { // get the fking data
                 if (config_move_grade) {
@@ -119,6 +122,45 @@
                 }
             });
         }
+    }
+
+    async function process_alert() {
+        $("#MenuArea").append(`<style>
+    #alert {
+        clear: both;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-left: 10vw;
+        width: 80vw;
+        border: 2px solid goldenrod;
+        border-radius: 25px;
+    }
+</style>
+<div id="alert">
+</div>`);
+        await get_graduate_alert();
+
+    }
+
+    async function get_graduate_alert() {
+        $.get($("#ASAs10").prop("href"),function(data) {
+            $.get($(data).find("#ASAs0").prop("href"),function (graduate_alert_page) {
+                $.get($(graduate_alert_page).find("#iframecontent").prop("src"),function (page) {
+                    let all = $(page).find("#GrdStd1_ctl02_GrdStd1_point4_lab")
+                    let necessary = $(page).find("#GrdStd1_ctl03_GrdStd1_point4_lab")
+                    let elective = $(page).find("#GrdStd1_ctl04_GrdStd1_point4_lab")
+                    if (all.css("color") == "rgb(255, 0, 0)") {
+                        warnings.push(new Warning($("#GrdStd1_ctl02_GrdStd1_condition_lab").text(),all.text(),$("#GrdStd1_ctl02_GrdStd1_point3_lab").text()));
+                    }
+                    if (necessary.css("color") == "rgb(255, 0, 0)") {
+                        warnings.push(new Warning($("#GrdStd1_ctl03_GrdStd1_condition_lab").text(),necessary.text(),$("#GrdStd1_ctl03_GrdStd1_point3_lab").text()));
+                    }
+                    if (elective.css("color") == "rgb(255, 0, 0)") {
+                        warnings.push(new Warning($("#GrdStd1_ctl04_GrdStd1_condition_lab").text(),elective.text(),$("#GrdStd1_ctl04_GrdStd1_point3_lab").text()));
+                    }
+                });
+            });
+        });
     }
 
     function read_config() {
@@ -203,6 +245,12 @@
             config_rank_colorNoRank = "#aaaaaa";
             GM_setValue("bss.rank_colorNoRank",config_rank_colorNoRank);
         }
+    }
+
+    function Warning(name,current,need) {
+        this.name = name;
+        this.current = current;
+        this.need = need;
     }
 
     function setup_setting_form() {
