@@ -1,13 +1,192 @@
-<style>
-    #alert {
-        clear: both;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        margin-left: 10vw;
-        width: 80vw;
-        border: 2px solid goldenrod;
-        border-radius: 25px;
-    }
-</style>
-<div id="alert">
+<div id="divbsssetting_outer_id" class="gray_bg" style="display: none;">
+    <div id="divbsssetting" class="grid_16 omega divsubcont_pop">
+        <div class="qa_content">
+            <div class="close_btn"></div>
+            <div class="grid_4 alpha">
+                <div class="sys_item">
+                    <div class="sys_item_img">
+                        <img src="/SCH_UI/images/setting1.png" id="schoolitemimage" class="grid_2 alpha" alt="設定">
+                    </div>
+                    <div class="sys_item_text">BSS設定</div>
+                </div>
+            </div>
+        </div>
+        <style>
+            #bss-setting_pannel {
+                overflow-y: scroll;
+            }
+            #bss-setting_pannel h2 {
+                font-size: 1.5rem;
+            }
+            .bss_setting {
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+
+            input:checked+.slider {
+                background-color: #2196F3;
+            }
+
+            input:focus+.slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked+.slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+        </style>
+        <div id="BullBlock" class="loginCenterBg"
+            style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
+            <div id="bss-setting_pannel" style="height: 100%;width: 100%;display: flex;flex-direction: column;gap: 15px;">
+                <h1>一般</h1>
+                <hr>
+                <div class="bss_setting">
+                    <p>保持登入</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-keep_login">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="bss_setting">
+                    <p>將成績查詢移至主畫面</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-move_grade">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="bss_setting">
+                    <p>顯示成績圖表</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-dashboard">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <h1>圖表</h1>
+                <hr>
+                <div class="bss_setting">
+                    <p>顯示排名種類</p>
+                    <select name="rank_type" id="bss-dashboard_type">
+                        <option value="school">校排</option>
+                        <option value="group">班群排</option>
+                        <option value="class">班排</option>
+                    </select>
+                </div>
+                <div class="bss_setting">
+                    <p>顯示等級</p>
+                    <label class="switch">
+                        <input type="checkbox" id="bss-dashboard_level">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <h1>顏色</h1>
+                <h2>等級</h2>
+                <hr>
+                <div class="bss_setting">
+                    <p>排名第一名顏色</p>
+                    <input type="color" id="bss-level_color100">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR90+顏色</p>
+                    <input type="color" id="bss-level_color90p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR75+顏色</p>
+                    <input type="color" id="bss-level_color75p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR50+顏色</p>
+                    <input type="color" id="bss-level_color50p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20+顏色</p>
+                    <input type="color" id="bss-level_color20p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20-顏色</p>
+                    <input type="color" id="bss-level_color20m">
+                </div>
+                <h2>圖表</h2>
+                <hr>
+                <div class="bss_setting">
+                    <p>排名PR90+顏色</p>
+                    <input type="color" id="bss-rank_color90p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR75+顏色</p>
+                    <input type="color" id="bss-rank_color75p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20+顏色</p>
+                    <input type="color" id="bss-rank_color20p">
+                </div>
+                <div class="bss_setting">
+                    <p>排名PR20-顏色</p>
+                    <input type="color" id="bss-rank_color20m">
+                </div>
+                <div class="bss_setting">
+                    <p>在你前面的排名顏色</p>
+                    <input type="color" id="bss-rank_colorNoRank">
+                </div>
+                <h1>不再顯示</h1>
+                <div class="bss_setting">
+                    <p>警報不再顯示清單</p>
+                    <input type="button" id="bss-never_show_clear" value="清空">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
