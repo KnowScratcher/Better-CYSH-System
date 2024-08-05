@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better School System
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0-pre1
+// @version      1.2.0-pre2
 // @description  校務行政系統太爛，我來改一下
 // @author       Know Scratcher
 // @match        https://*.k12ea.gov.tw/SCH_UI/*
@@ -17,11 +17,30 @@
 (function () {
     "use strict";
 
+    class Alert {
+        constructor(title,body,type="unset",image=`<img height="100px" src="https://cysh-cy.k12ea.gov.tw/SCH_UI/images/%E6%9C%AA%E8%AE%80.png" alt="">`) {
+            this.title = title;
+            this.body = body;
+            this.type = type
+            this.image = image;
+
+        }
+    }
+
     class Warning {
         constructor(name, current, need) {
             this.name = name;
             this.current = current;
             this.need = need;
+        }
+    }
+
+    class Login {
+        constructor(ip, browser, platform, time) {
+            this.ip = ip;
+            this.browser = browser;
+            this.platform = platform;
+            this.time = time;
         }
     }
 
@@ -63,11 +82,14 @@
     let config_rank_color20m = "#000000";
     let config_rank_colorNoRank = "#000000";
     let config_never_show = [];
+    let config_allowed_ip = [];
 
     let setting_changed = false;
 
-    let warnings = [];
+    let alerts = [];
     let showed_warngings = 0;
+
+    let sus_logins = [];
 
     read_config();
     add_canvas_js();
@@ -151,14 +173,20 @@
         width: 80vw;
         border: 2px solid goldenrod;
         border-radius: 0px;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+    #alert * {
+        cursor: default;
     }
     .alert_plate {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         align-items: center;
-        background-color: gold;
-        border: 2px solid goldenrod;
+        /*background-color: gold;*/
+        border: 2px solid gold;
         height: auto;
         width: 100%;
         gap: 5px;
@@ -185,11 +213,72 @@
 <div id="alert">
     &nbsp;&nbsp;正在取得預警資料...
 </div>`);
-        get_graduate_alert();
+        await get_graduate_alert();
+        await get_login_alert();
+        $("#alert").empty()
+        if (alerts.length == 0) {
+            $("#alert").html("&nbsp;&nbsp;很棒喔，沒有找到預警");
+            $("#alert").css("border","2px solid green");
+            setTimeout(() => {
+                $("#alert").slideUp().fadeOut(1000);
+            }, 1000);
+        }else {
+            alerts.forEach(element => {
+                if (element.type == "login") {
+                    $("#alert").append(`
+                    <div id="divsetinfo_outer_id" class="gray_bg" style="display: none;">
+    <div id="divsetinfo" class="grid_16 omega divsubcont_pop">
+        <div class="qa_content">
+            <div class="close_btn"></div>
+            <div class="grid_4 alpha">
+                <div class="sys_item">
+                    <div class="sys_item_img">
+                        <img src="/SCH_UI/images/account_gray_solid2.png" id="schoolitemimage" class="grid_2 alpha" alt="設定">
+                    </div>
+                    <div class="sys_item_text">登入檢查</div>
+                </div>
+            </div>
+        </div>
+        <div id="BullBlock" class="loginCenterBg" style="height: calc(100% - 70px); overflow: auto; float: left; width: 100%;">
+            <iframe id="login_inspect" src="./SETINFO.aspx" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+</div>  
+                    `);
+                    $("#divsetinfo > div.qa_content > div.close_btn").click(function() {
+                        $("#divsetinfo_outer_id").fadeOut(); // can improve to all cases
+                    })
+                    $("#login_inspect").on("load",function() {
+                        console.log("load")
+                        $(this).contents().find("#P1").css("display","none");
+                        $(this).contents().find("#P2").css("display","block");
+                    });
+                }
+                $("#alert").append(`
+                    <div class="alert_plate">
+                        ${element.image}
+                        <div class="alert_text">
+                            <h3>${element.title}</h3>
+                            <p>${element.body}</p>
+                        </div>
+                        <span class="never_show">&cross;</span>
+                    </div>
+                `);
+            });
+            $("#alert > div > span").click(function () {
+                alerts.splice(0,1); // delete anything, it doesn't matter. (it's just for the length)
+                $(this).parent().slideUp();
+                config_never_show.push(new Alert($(this).parent().find("h3").text(),$(this).parent().find("p").text(),$(this).parent().find("img").prop('outerHTML')));
+                GM_setValue("bss.never_show",config_never_show);
+                if (alerts.length == 0) {
+                    $("#alert").fadeOut();
+                }
+            })
+        }
     }
 
-    function get_graduate_alert() {
-        $.get($("#ASAs10").prop("href"))
+    async function get_graduate_alert() {
+        return $.get($("#ASAs10").prop("href"))
         .then(function(data) {
             return $.get($(data).find("#ASAs0").prop("href"));
         })
@@ -200,52 +289,59 @@
             let all = $(page).find("#GrdStd1_ctl02_GrdStd1_point4_lab");
             let necessary = $(page).find("#GrdStd1_ctl03_GrdStd1_point4_lab");
             let elective = $(page).find("#GrdStd1_ctl04_GrdStd1_point4_lab");
-            console.log(all.css("color"));
+            let _warnings = [];
             if (all.css("color") == "rgb(255, 0, 0)" || all.css("color") == "red") {
-                warnings.push(new Warning($(page).find("#GrdStd1_ctl02_GrdStd1_condition_lab").text(),all.text(),$(page).find("#GrdStd1_ctl02_GrdStd1_point3_lab").text()));
+                _warnings.push(new Alert($(page).find("#GrdStd1_ctl02_GrdStd1_condition_lab").text(),`${all.text()} / ${$(page).find("#GrdStd1_ctl02_GrdStd1_point3_lab").text()}`));
+                //_warnings.push(new Warning($(page).find("#GrdStd1_ctl02_GrdStd1_condition_lab").text(),all.text(),$(page).find("#GrdStd1_ctl02_GrdStd1_point3_lab").text()));
             }
             if (necessary.css("color") == "rgb(255, 0, 0)" || necessary.css("color") == "red") {
-                warnings.push(new Warning($(page).find("#GrdStd1_ctl03_GrdStd1_condition_lab").text(),necessary.text(),$(page).find("#GrdStd1_ctl03_GrdStd1_point3_lab").text()));
+                _warnings.push(new Alert($(page).find("#GrdStd1_ctl03_GrdStd1_condition_lab").text(),`${necessary.text()} / ${$(page).find("#GrdStd1_ctl03_GrdStd1_point3_lab").text()}`));
+                //_warnings.push(new Warning($(page).find("#GrdStd1_ctl03_GrdStd1_condition_lab").text(),necessary.text(),$(page).find("#GrdStd1_ctl03_GrdStd1_point3_lab").text()));
             }
             if (elective.css("color") == "rgb(255, 0, 0)" || elective.css("color") == "red") {
-                warnings.push(new Warning($(page).find("#GrdStd1_ctl04_GrdStd1_condition_lab").text(),elective.text(),$(page).find("#GrdStd1_ctl04_GrdStd1_point3_lab").text()));
+                _warnings.push(new Alert($(page).find("#GrdStd1_ctl04_GrdStd1_condition_lab").text(),`${elective.text()} / ${$(page).find("#GrdStd1_ctl04_GrdStd1_point3_lab").text()}`));
+                //_warnings.push(new Warning($(page).find("#GrdStd1_ctl04_GrdStd1_condition_lab").text(),elective.text(),$(page).find("#GrdStd1_ctl04_GrdStd1_point3_lab").text()));
             }
-            $("#alert").empty();
+            // $("#alert").empty();
 
-            warnings.forEach(element => {
-                if (!isIn(config_never_show,JSON.parse(JSON.stringify(element)))) {
-                    showed_warngings++;
-                    $("#alert").append(`
-                        <div class="alert_plate">
-                            <img height="100px" src="https://cysh-cy.k12ea.gov.tw/SCH_UI/images/%E6%9C%AA%E8%AE%80.png" alt="">
-                            <div class="alert_text">
-                                <h3>${element.name}</h3>
-                                <p>${element.current} / ${element.need}</p>
-                            </div>
-                            <span class="never_show">&cross;</span>
-                        </div>
-                    `);
+            _warnings.forEach(element => {
+                if (!isIn(config_never_show,JSON.parse(JSON.stringify(element)),["image"])) {
+                    alerts.push(element);
                 }
             });
-            if (showed_warngings == 0) {
-                $("#alert").html("&nbsp;&nbsp;很棒喔，沒有找到預警");
-                $("#alert").css("border","2px solid green");
-                setTimeout(() => {
-                    $("#alert").slideUp().fadeOut(1000);
-                }, 1000);
-            }else {
-                $("#alert > div > span").click(function () {
-                    showed_warngings--;
-                    $(this).parent().slideUp();
-                    config_never_show.push(new Warning($(this).parent().find("h3").text(),$(this).parent().find("p").text().split(" / ")[0],$(this).parent().find("p").text().split(" / ")[1]));
-                    GM_setValue("bss.never_show",config_never_show);
-                    if (showed_warngings == 0) {
-                        $("#alert").fadeOut();
+        });
+    }
+
+    function get_login_alert() {
+        return $.get("./SETINFO.aspx")
+        .then(function (page) {
+            let now_ip = $(page).find(`#infotable > tbody > tr:nth-child(1) > td:nth-child(2)`).text().split(",");
+            let _warning_count = {};
+            let _warnings = [];
+            for (let i=1;i<$(page).find("#infotable > tbody > tr").length;i++) {
+                let ips = $(page).find(`#infotable > tbody > tr:nth-child(${i+1}) > td:nth-child(2)`).text().split(",");
+                ips.forEach(e => {
+                    // not preserved or now
+                    if (!e.startsWith("10")&&!e.startsWith("192")&&!(e.startsWith("172")&&(parseInt(e.split(".")[1])>=16&&parseInt(e.split(".")[1])<=31))&&!(now_ip.includes(e))&&!(e in config_allowed_ip)) {
+                        console.log(now_ip)
+                        let ip = e;
+                        let browser = $(page).find(`#infotable > tbody > tr:nth-child(${i+1}) > td:nth-child(3)`).text();
+                        let platform = $(page).find(`#infotable > tbody > tr:nth-child(${i+1}) > td:nth-child(4)`).text();
+                        let time = $(page).find(`#infotable > tbody > tr:nth-child(${i+1}) > td:nth-child(6)`).text();
+                        _warning_count.hasOwnProperty(ip)?_warning_count[ip].push(new Login(ip,browser,platform,time)):_warning_count[ip]=[new Login(ip,browser,platform,time)];
                     }
-                })
+                });
             }
+            for (const [key,value] of Object.entries(_warning_count)) {
+                _warnings.push(new Alert(`不明IP ${key} 登入`,value[0].time,"login",`<div style="height: 80px;aspect-ratio: 1;margin: 10px;border-radius: 50%;border: 8px solid #daaf6d;background-color: #bd5550;color: white;text-align: center;font-size: 40px;" onclick="$('#divsetinfo_outer_id').fadeIn();"><p style="padding: 25%;">${value.length}</p></div>`));
+            }
+            _warnings.forEach(element => {
+                if (!isIn(config_never_show,JSON.parse(JSON.stringify(element)),["image"])) {
+                    alerts.push(element);
+                }
+            });
         })
-    }    
+    }
 
     function read_config() {
         config_keep_login = GM_getValue("bss.keep_login");
@@ -265,6 +361,7 @@
         config_rank_color20m = GM_getValue("bss.rank_color20m");
         config_rank_colorNoRank = GM_getValue("bss.rank_colorNoRank");
         config_never_show = GM_getValue("bss.never_show");
+        config_allowed_ip = GM_getValue("bss.allowed_ip");
         setting_changed = false;
         if (config_keep_login == undefined) {
             config_keep_login = false;
@@ -333,6 +430,10 @@
         if (config_never_show == undefined) {
             config_never_show = [];
             GM_setValue("bss.never_show",config_never_show);
+        }
+        if (config_allowed_ip == undefined) {
+            config_allowed_ip = [];
+            GM_setValue("bss.allowed_ip",config_allowed_ip);
         }
     }
 
@@ -864,11 +965,11 @@
         return result;
     }
 
-    function isIn(list,value) {
+    function isIn(list,value,omit=[]) {
         let is_False = true;
         for (let i=0;i<list.length;i++) {
             console.log(list[i],value);
-            if (_.isEqual(list[i],value)) {
+            if (_.isEqual(_.omit(list[i], omit),_.omit(value, omit))) {
                 is_False = false;
                 return true;
             }
